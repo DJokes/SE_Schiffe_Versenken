@@ -25,7 +25,8 @@ public class GUI {
 	private JButton opt3 = new JButton("Wasser");
 	private JButton opt4 = new JButton("Ecken");
 	private JButton opt5 = new JButton("Ber\u00fchren");
-
+	
+	//Gute Arbeit Jonas
 	public GUI(Spiel game) {
 		this.game = game;
 	}
