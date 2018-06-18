@@ -16,6 +16,8 @@ public class Spiel {
         
         // call GUIController to register Listeners
         controller = new GUIController(gui);
+	    
+	// ...
     
     }
 
