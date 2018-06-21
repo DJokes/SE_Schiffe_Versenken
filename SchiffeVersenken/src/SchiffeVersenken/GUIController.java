@@ -17,7 +17,7 @@ public class GUIController extends MouseAdapter implements ActionListener, Mouse
 	private JButton opt4 = null;
 	private JButton opt5 = null;
 	private JButton ship_placement_ok = null;
-	private JPanel[] leftGridFieldArray = null;
+	private JButton[] leftGridFieldArray = null;
 	private JPanel[] rightGridFieldArray = null;
 	
 	public GUIController(GUI gui) {
@@ -42,8 +42,8 @@ public class GUIController extends MouseAdapter implements ActionListener, Mouse
 		opt5 = gui.getOpt5();
 		opt5.addActionListener(this);
 		
-		ship_placement_ok = gui.getShip_placement_ok();
-		ship_placement_ok.addActionListener(this);
+//		ship_placement_ok = gui.getShip_placement_ok();
+//		ship_placement_ok.addActionListener(this);
 		
 		leftGridFieldArray = gui.getLeftGridFieldArray();
 		for(int i = 0; i < leftGridFieldArray.length; i++)
@@ -84,8 +84,12 @@ public class GUIController extends MouseAdapter implements ActionListener, Mouse
 			gui.openGameFrame();
 		
 		} else if(e.getSource() == ship_placement_ok) {
-			
-			gui.placeShip();
+			for (int i=0;i<leftGridFieldArray.length;i++)
+			{
+			//	if (e.()==leftGridFieldArray[i])
+					gui.placeShip(i);
+			}
+			//gui.placeShip();
 			
 		} else {
 			System.exit(0);
@@ -102,6 +106,7 @@ public class GUIController extends MouseAdapter implements ActionListener, Mouse
 		for(int i = 0; i < leftGridFieldArray.length; i++) {
 			if(e.getSource() == leftGridFieldArray[i]) {
 				System.out.println("Linkes Spielfeld, Index: " + i);
+				gui.placeShip(i);
 				break;
 			}
 		}
