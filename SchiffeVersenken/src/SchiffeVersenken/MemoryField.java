@@ -49,6 +49,18 @@ public class MemoryField {
 		 }
 	}
 	
+	public int totalHits() {
+		int counter = 0;
+		for(int line=0; line < this.maxY; line++){
+			for(int column=0; column < this.maxX; column++){
+				if(getValue(line, column)){
+					counter++;
+				} 			
+			}
+		}
+		return counter;
+	}
+	
 	public void hit(Position pos){
 		if(checkBounds(pos)){
 			 setValue(pos, true);
@@ -68,16 +80,16 @@ public class MemoryField {
 	}
 	
 	public String toString(){
-		String fieldString = new String("");
+		String fieldString = "";
 		for(int line=0; line < this.maxY; line++){
 			for(int column=0; column < this.maxX; column++){
-				if(getValue(column, line)){
-					fieldString.concat("[X]");//X for true/hit
+				if(getValue(line, column)){
+					fieldString += "[X]";//.concat(new String("[X]"));//X for true/hit
 				} else{
-					fieldString.concat("[0]");//0 for false
+					fieldString += "[0]";//.concat(new String("[0]"));//0 for false
 				}				
 			}
-			fieldString.concat("\n");
+			fieldString += "\n";//.concat(new String("\n"));
 		}
 		
 		return fieldString;

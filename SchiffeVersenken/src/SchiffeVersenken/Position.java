@@ -43,6 +43,12 @@ public class Position {//doesn't check bounds
 		return new Position(rx, ry);
 	}
 	
+	public Position random(int max){
+		int rx = (int) Math.round((Math.random() * max));
+		int ry = (int) Math.round((Math.random() * max));
+		return new Position(rx, ry);
+	}
+	
 	public Position random(int x, int y){
 		int rx = (int) Math.round((Math.random() * x));
 		int ry = (int) Math.round((Math.random() * y));

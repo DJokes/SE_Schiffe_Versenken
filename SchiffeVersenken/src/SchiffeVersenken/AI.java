@@ -1,23 +1,41 @@
 package SchiffeVersenken;
 
-public class Ai {
+public class AI {
 	
 	private Spielfeld field;
 	private MemoryField history;
 	private Position lastShot;
 	
-	public Ai(Spielfeld aiField){
+	public AI(){
+		super();
+		this.field = new Spielfeld();//default is 0, 0
+		this.history = new MemoryField();
+		this.lastShot = new Position();
+	}
+	
+	public AI(int shipType, int positioning){
+		super();
+		this.field = new Spielfeld(shipType, positioning);
+		this.history = new MemoryField();
+		this.lastShot = new Position();
+	}
+	
+	public AI(Spielfeld aiField){
 		this.field = aiField;
 		this.history = new MemoryField();
 		this.lastShot = new Position();
 	}
 	
 	private Spielfeld getField(){
-		return field;
+		return this.field;
 	}
 	
 	private MemoryField getHistory(){
-		return history;
+		return this.history;
+	}
+	
+	private void setLastShot(Position shot) {
+		this.lastShot = shot;
 	}
 	
 	public void setShips() {
@@ -27,8 +45,8 @@ public class Ai {
 			ships[i] = 1;
 		}
 		int direction = 1;
-		Position position = new Position(0,0);
-		position.random(1, 8);
+		Position position = new Position().random(7);//0 to 7 on x and y
+		position = position.add(1);//1 to 8 on x and y
 		for (int ship = ships.length - 1; ship >= 2; ship--) {
 			for (int j = 0; j < ships[ship]; j++) {
 				position = getStartPoint(ship);
@@ -36,7 +54,7 @@ public class Ai {
 				int tries = 0;
 				while (shipIsNotSet) {
 					// Try setting the ship to the position
-					if (field.setShip(ship, new Position(position.getVertical(), position.getHorizontal()),direction)) {
+					if (field.setShip(ship, position,direction)) {
 						shipIsNotSet = false;
 					}
 					// Invert direction
@@ -54,7 +72,8 @@ public class Ai {
 					tries++;
 				}
 				direction = changeDirection(direction);
-				position.random(1, 8);
+				position = new Position().random(7);//0 to 7 on x and y
+				position = position.add(1);//1 to 8 on x and y
 			}
 		}
 	}
@@ -74,7 +93,8 @@ public class Ai {
 	private Position getStartPoint(int ship){
 		Position candidate = new Position().random();
 		while(!this.field.possibleSet(candidate, ship)){
-			candidate = generateKoordinates(1, 8);
+			candidate = new Position().random(7);//0 to 7 on x and y
+			candidate = candidate.add(1);//1 to 8 on x and y
 		}
 		return candidate;
 	}
@@ -88,11 +108,13 @@ public class Ai {
 			candidate = new Position().random();
 			if(this.field.checkBounds(candidate)){//in bounds
 				if(!this.history.wasHit(candidate)){//not a repeat
+					setLastShot(candidate);
 					return candidate;
 				}
 			}
 			counter++;
-		}		
+		}
+		setLastShot(candidate);
 		return candidate; //TODO alternative when cant find unrepeated shots after limit tries
 	}
 	
@@ -107,18 +129,22 @@ public class Ai {
 	}
 
 	public static void main(String[] args) {
-		Ai test = new Ai(new Spielfeld(0, 2));
+		AI test = new AI(new Spielfeld(0, 2));
 		test.setShips();
 		System.out.println("Your Field");
 		test.getField().printField();
 		System.out.println("");
-//		System.out.println("Your History");
-//		System.out.println(test.getHistory());
-//		System.out.println("");
-//		test.takeTurn();
-//		System.out.println("Your History after shot");
-//		System.out.println(test.getHistory());
-//		System.out.println("");
+		System.out.println("Your History");
+		System.out.println(test.getHistory());
+		System.out.println("");
+		for(int i = 0; i < 30; i++) {
+			test.takeTurn();
+			test.turnResult(0);
+		}		
+		System.out.println("Your History after 30 shots");
+		System.out.print("" + test.getHistory().totalHits() + " hits\n");
+		System.out.println(test.getHistory());
+		System.out.println("");
 
 	}
 
