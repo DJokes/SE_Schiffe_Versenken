@@ -28,6 +28,7 @@ public class GUI {
 	private JButton opt3 = new JButton("Wasser");
 	private JButton opt4 = new JButton("Ecken");
 	private JButton opt5 = new JButton("Ber\u00fchren");
+	private JButton reset = new JButton("Reset");
 	// private JButton ship_placement_ok = new JButton("Setzen");
 	private JLabel leftGridScore = new JLabel("", SwingConstants.CENTER);
 	private JLabel rightGridScore = new JLabel("", SwingConstants.CENTER);
@@ -144,6 +145,11 @@ public class GUI {
 		ship_combobox.setSize(100, 50);
 		ship_combobox.setLocation((1000 / 2) - 50, 215);
 		gameFrame.add(ship_combobox);
+		
+		reset.setSize(80, 40);
+		reset.setLocation((1000/2)-40,  280);
+		reset.setVisible(true);
+		gameFrame.add(reset);
 
 		// ship_placement_ok.setSize(100,35);
 		// ship_placement_ok.setLocation((1000/2)-50, 260);
@@ -483,6 +489,26 @@ public class GUI {
 		ruleFrame.dispose();
 		ruleFrame = null;
 	}
+	
+	public void removeGameFrame() {
+		gameFrame.dispose();
+		gameFrame = null;
+	}
+	
+	public void clearField() {
+		for(int x = 0; x < 10; x++) {
+			for(int y = 0; y < 10; y++) {
+				fieldArray[x][y] = false;
+			}
+		}
+		shipNormal[2] = 4;
+		shipNormal[3] = 3;
+		shipNormal[4] = 2;
+		shipNormal[5] = 1;
+		
+		x = 0;
+		y = 0;
+	}
 
 	public JButton getOpt1() {
 		return opt1;
@@ -503,6 +529,10 @@ public class GUI {
 
 	public JButton getOpt5() {
 		return opt5;
+	}
+	
+	public JButton getReset() {
+		return reset;
 	}
 
 	public JButton[] getLeftGridFieldArray() {

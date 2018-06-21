@@ -17,6 +17,7 @@ public class GUIController extends MouseAdapter implements ActionListener, Mouse
 	private JButton opt4 = null;
 	private JButton opt5 = null;
 	private JButton ship_placement_ok = null;
+	private JButton reset = null;
 	private JButton[] leftGridFieldArray = null;
 	private JPanel[] rightGridFieldArray = null;
 	
@@ -41,6 +42,9 @@ public class GUIController extends MouseAdapter implements ActionListener, Mouse
 		
 		opt5 = gui.getOpt5();
 		opt5.addActionListener(this);
+		
+		reset = gui.getReset();
+		reset.addActionListener(this);
 		
 //		ship_placement_ok = gui.getShip_placement_ok();
 //		ship_placement_ok.addActionListener(this);
@@ -94,7 +98,14 @@ public class GUIController extends MouseAdapter implements ActionListener, Mouse
 			}
 			//gui.placeShip();
 			
-		} else {
+		}else if(e.getSource() == reset) {
+			gui.clearField();
+			gui.removeGameFrame();
+			gui.openGameFrame();
+		}
+		
+		
+		else {
 			System.exit(0);
 		}
 		
