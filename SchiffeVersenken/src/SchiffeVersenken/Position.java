@@ -2,24 +2,24 @@ package SchiffeVersenken;
 
 public class Position {
 
-	private int x;
-	private int y;
+	private int vertical;
+	private int horizontal;
 	
-	public Position(int x, int y){
-		this.x = x;
-		this.y = y;
+	public Position(int horizontal, int vertical){
+		this.vertical = vertical;
+		this.horizontal = horizontal;
 	}
 	
-	public int getX(){
-		return x;
+	public int getVertical(){
+		return vertical;
 	}
 	
-	public int getY(){
-		return y;
+	public int getHorizontal(){
+		return horizontal;
 	}
 	
-	public void verschiebe(int deltaX, int deltaY){
-		x += deltaX;
-		y += deltaY;
+	public void verschiebe(int deltaHorizontal, int deltaVertical){
+		vertical += deltaVertical;
+		horizontal += deltaHorizontal;
 	}
 }

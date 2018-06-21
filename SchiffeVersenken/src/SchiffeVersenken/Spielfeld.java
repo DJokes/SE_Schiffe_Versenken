@@ -21,27 +21,26 @@ public class Spielfeld {
 		return positioning;
 	}
 	
-	public void setShip(int ship, Position startPosition, int direction){
-		Position pos = startPosition;
+	public void setShip(int ship, Position startPositon, int direction){
 		for(int i = 0; i < ship; i++){
-			if(field[pos.getX()][pos.getY()] == 0)
+			if(field[startPositon.getVertical()][startPositon.getHorizontal()] == 0)
 				
-				field[pos.getX()][pos.getY()] = ship;
+				field[startPositon.getVertical()][startPositon.getHorizontal()] = ship;
 			//to the right
 			if(direction == 0){
-				pos.verschiebe(-1, 0);
+				startPositon.verschiebe(+1, 0);
 			}
 			//to the left
 			else if(direction == 1){
-				pos.verschiebe(1, 0);
+				startPositon.verschiebe(-1, 0);
 			}
 			//up 
 			else if(direction == 2){
-				pos.verschiebe(0, -1);
+				startPositon.verschiebe(0, -1);
 			}
 			//down
 			else{
-				pos.verschiebe(0, 1);
+				startPositon.verschiebe(0, +1);
 			}
 		}
 	}
@@ -50,22 +49,22 @@ public class Spielfeld {
 		if(positioning == 2){
 			boolean xPossible = true;
 			for(int i = 0; i <= delta; i++){
-				if(pos.getX() > 0 && field[pos.getX()-1][pos.getY()] != 0){
+				if(pos.getVertical() > 0 && field[pos.getVertical()-1][pos.getHorizontal()] != 0){
 					xPossible = false;
 					break;
 				}
-				else if(pos.getX() < 9 && field[pos.getX()+1][pos.getY()] != 0){
+				else if(pos.getVertical() < 9 && field[pos.getVertical()+1][pos.getHorizontal()] != 0){
 					xPossible = false;
 					break;
 				}
 			}
 			boolean yPossible = true;
 			for(int i = 0; i <= delta; i++){
-				if(pos.getY() > 0 && field[pos.getX()][pos.getY()-1] != 0){
+				if(pos.getHorizontal() > 0 && field[pos.getVertical()][pos.getHorizontal()-1] != 0){
 					yPossible = false;
 					break;
 				}
-				else if(pos.getY() < 9 && field[pos.getX()][pos.getY()+1] != 0){
+				else if(pos.getHorizontal() < 9 && field[pos.getVertical()][pos.getHorizontal()+1] != 0){
 					yPossible = false;
 					break;
 				}
@@ -84,20 +83,20 @@ public class Spielfeld {
 		if(positioning == 2){
 			int direction = 0;
 			for(int i = 0; i <= delta; i++)
-				if(pos.getX() > 0 && field[pos.getX()-1][pos.getY()] != 0){
+				if(pos.getVertical() > 0 && field[pos.getVertical()-1][pos.getHorizontal()] != 0){
 					direction = 1;
 				}
 			for(int i = 0; i <= delta; i++)
-				if(pos.getX() < 9 && field[pos.getX()+1][pos.getY()] != 0){
+				if(pos.getVertical() < 9 && field[pos.getVertical()+1][pos.getHorizontal()] != 0){
 					direction = 2;
 				}
 			
 			for(int i = 0; i <= delta; i++)
-				if(pos.getY() > 0 && field[pos.getX()][pos.getY()-1] != 0){
+				if(pos.getHorizontal() > 0 && field[pos.getVertical()][pos.getHorizontal()-1] != 0){
 					direction = 3;
 				}
 			for(int i = 0; i <= delta; i++)
-				if(pos.getY() < 9 && field[pos.getX()][pos.getY()+1] != 0){
+				if(pos.getHorizontal() < 9 && field[pos.getVertical()][pos.getHorizontal()+1] != 0){
 					direction = -1;
 				}
 			return direction;
@@ -114,15 +113,18 @@ public class Spielfeld {
 		}
 	}
 	
-	public boolean checkHit(int x, int y){
-		if(field[x][y] != 0 ){
-			if(field[x][y] >= 1 && field[x][y] <= 10){
-				field[x][y] = 100;
+	public boolean checkHit(int vertical, int horizontal){
+		if(field[vertical][horizontal] != 0 ){
+			if(field[vertical][horizontal] >= 1 && field[vertical][horizontal] <= 10){
+				field[vertical][horizontal] = 100;
 				return true;
 			}
-			else if(field[x][y] == 100){
+			else if(field[vertical][horizontal] == 100){
 				return false;
 			}
+		}
+		else{
+			field[vertical][horizontal] = -1;
 		}
 		return false;
 	}
