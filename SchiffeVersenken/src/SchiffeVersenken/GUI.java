@@ -41,7 +41,12 @@ public class GUI {
 	private JPanel seperator_up = new JPanel();
 	private JPanel seperator = new JPanel();
 	private boolean setzen = false;
-
+	private int x = 0;
+	private int y = 0;
+	private int shipNormal[] = {0, 0, 4, 3, 2, 1};
+	private int shipSpezial[] = new int[10];
+	private int chosenSettings = 0;
+	
 	// Danke, Maze :D
 	public GUI(Spiel game) {
 		this.game = game;
@@ -260,6 +265,14 @@ public class GUI {
 		}
 
 	}
+	
+	private int getShipHitpoints(int [] shipArray){
+		int sum = 0;
+		for(int i = 0; i < shipArray.length; i++){
+			sum = sum + i*shipArray[i];
+		}
+		return sum;
+	}
 
 	public boolean placeShip(int index) {
 
@@ -267,13 +280,12 @@ public class GUI {
 		
 		// if(summe > 0) {
 		if (setzen) {
-			int diffX = index - index % 10;
-			int diffY = index - index / 10;
-			int firstX = index % 10;
-			int firstY = index / 10;
-			System.out.println(firstX + firstY);
+			int diffX = index % 10 - x;
+			int diffY =  index / 10 - y ;
+			int firstX = x;
+			int firstY = y;
 			boolean isValid = false;
-			//
+			
 			if (Math.abs(diffX) < ship_size && Math.abs(diffY) < ship_size) {
 				if (diffX == 0 ^ diffY == 0) {
 					fieldArray[firstX][firstY] = false;
@@ -281,13 +293,17 @@ public class GUI {
 					isValid = true;
 				}
 			}
-			for (int i = 0; i < ship_size; i++) {
-				if (!isFieldValidate(firstX + (diffX != 0 ? (int) Math.copySign(i, diffX) : 0),
-						firstY + (diffY != 0 ? (int) Math.copySign(i, diffY) : 0))) {
-					isValid = false;
-					break;
+			
+			if (chosenSettings == 1) {
+				for (int i = 0; i < ship_size; i++) {
+					if (!isFieldValidate(firstX + (diffX != 0 ? (int) Math.copySign(i, diffX) : 0),
+							firstY + (diffY != 0 ? (int) Math.copySign(i, diffY) : 0))) {
+						isValid = false;
+						break;
+					}
 				}
 			}
+			
 
 			if (isValid) {
 				for (int i = 0; i < ship_size; i++) {
@@ -306,23 +322,31 @@ public class GUI {
 		}
 	
 
-	else
+		else {
+			x = index % 10;
+			y = index / 10;
+			
+			if (isShipSizeValidate(x, y, ship_size)) {
+				if (ship_size != 1) {
+					setzen = true;
+				}
+				fieldArray[x][y] = true;
+				leftGridFieldArray[x + (y * 10)].setBackground(Color.GREEN);
 
-	{
-//		if (isShipSizeValidate(index, ship_size)) {
-			setzen = true;
-			int x = index % 10;
-			int y = index / 10;
-			fieldArray[x][y] = true;
-			leftGridFieldArray[x+(y*10)].setBackground(Color.GREEN);
-//			lblNewLabel.setText("" + summe);
-			return true;}
+				return true;
 
+			}
+		}
+		if(getShipHitpoints(shipNormal) == 0) {
+			 startGame();
+			 }
+		
 		return setzen;
+	}
 
-		//// if(summe == 0) {
-		// startGame();
-		// }
+	private void startGame() {
+		System.out.println("Test");
+		
 	}
 
 	public boolean isInField(int x, int y) {
@@ -362,67 +386,76 @@ public class GUI {
 		}
 
 		return true;
-
-		//
-		// public boolean isShipSizeValidate(int x, int y, int size) {
-		// if(isFieldValidate(x, y)) {
-		// //1 da eigenes nicht mit gepr�ft werden muss
-		// int possibleFields = 1;
-		//
-		// //X-achse links
-		// for(int i = 1; i < size && isFieldValidate(x-i, y); i++) {
-		// possibleFields++;
-		// }
-		//
-		// //X-achse rechts
-		// for(int i = 1; i < size && isFieldValidate(x+i, y); i++) {
-		// possibleFields++;
-		// }
-		//
-		// if(possibleFields >= size) {
-		// return true;
-		// }else {
-		// //1 da eigenes nicht mit gepr�ft werden muss
-		// possibleFields = 1;
-		//
-		// //Y-achse links
-		// for(int i = 1; i < size && isFieldValidate(x, y-i); i++) {
-		// possibleFields++;
-		// }
-		//
-		// //Y-achse rechts
-		// for(int i = 1; i < size && isFieldValidate(x, y+i); i++) {
-		// possibleFields++;
-		// }
-		//
-		// if(possibleFields >= size) {
-		// return true;
-		// }
-		// }
-		// }
-		// return false;
-		// }
-		//
-		// private int getNextShipSize() {
-		// if(availableSchlachtschiffe > 0) {
-		// availableSchlachtschiffe--;
-		// return 5;
-		// } else if(availablekreuzer > 0) {
-		// availablekreuzer--;
-		// return 4;
-		// } else if(availableZerstoerer > 0) {
-		// availableZerstoerer--;
-		// return 3;
-		// } else if(availableUBoots > 0) {
-		// availableUBoots--;
-		// return 2;
-		// }
-		//
-		// return 0;
-
 	}
+		
+	public boolean isShipSizeValidate(int x, int y, int size) {
+		if(shipNormal[size] == 0){
+			return false;
+		}
+		if (isFieldValidate(x, y)) {
+			// 1 da eigenes nicht mit gepr�ft werden muss
+			int possibleFields = 1;
 
-	//
+			// X-achse links
+			for (int i = 1; i < size && isFieldValidate(x - i, y); i++) {
+				possibleFields++;
+			}
+
+			// X-achse rechts
+			for (int i = 1; i < size && isFieldValidate(x + i, y); i++) {
+				possibleFields++;
+			}
+
+			if (possibleFields >= size) {
+				shipNormal[size]--;
+				return true;
+			} else {
+				// 1 da eigenes nicht mit gepr�ft werden muss
+				possibleFields = 1;
+
+				// Y-achse links
+				for (int i = 1; i < size && isFieldValidate(x, y - i); i++) {
+					possibleFields++;
+				}
+
+				// Y-achse rechts
+				for (int i = 1; i < size && isFieldValidate(x, y + i); i++) {
+					possibleFields++;
+				}
+
+				if (possibleFields >= size) {
+					shipNormal[size]--;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+		
+//		 private int getNextShipSize() {
+//		 if(availableSchlachtschiffe > 0) {
+//		 availableSchlachtschiffe--;
+//		 return 5;
+//		 } else if(availablekreuzer > 0) {
+//		 availablekreuzer--;
+//		 return 4;
+//		 } else if(availableZerstoerer > 0) {
+//		 availableZerstoerer--;
+//		 return 3;
+//		 } else if(availableUBoots > 0) {
+//		 availableUBoots--;
+//		 return 2;
+//		 }
+//		
+//		 return 0;
+		
+		
+	
+
+	public void setChosenSettings(int choice){
+		chosenSettings = choice;
+	}
+	
 	public void setPlayerScore(int score) {
 		leftGridScore.setText("Dein Score: " + score);
 	}
@@ -460,6 +493,7 @@ public class GUI {
 	}
 
 	public JButton getOpt3() {
+		
 		return opt3;
 	}
 

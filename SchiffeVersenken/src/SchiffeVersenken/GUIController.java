@@ -70,16 +70,19 @@ public class GUIController extends MouseAdapter implements ActionListener, Mouse
 		
 		} else if(e.getSource() == opt3) {
 		
+			gui.setChosenSettings(1);
 			gui.removeRulesFrame();
 			gui.openGameFrame();
 		
 		} else if(e.getSource() == opt4) {
 		
+			gui.setChosenSettings(2);
 			gui.removeRulesFrame();
 			gui.openGameFrame();
 		
 		} else if(e.getSource() == opt5) {
 		
+			gui.setChosenSettings(3);
 			gui.removeRulesFrame();
 			gui.openGameFrame();
 		
@@ -87,7 +90,7 @@ public class GUIController extends MouseAdapter implements ActionListener, Mouse
 			for (int i=0;i<leftGridFieldArray.length;i++)
 			{
 			//	if (e.()==leftGridFieldArray[i])
-					gui.placeShip(i);
+			//		gui.placeShip(i);
 			}
 			//gui.placeShip();
 			
