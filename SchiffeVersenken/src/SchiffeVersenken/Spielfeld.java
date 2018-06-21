@@ -23,85 +23,85 @@ public class Spielfeld {
 	
 	public void setShip(int ship, Position startPositon, int direction){
 		for(int i = 0; i < ship; i++){
-			if(field[startPositon.getVertical()][startPositon.getHorizontal()] == 0)
-				
+			if(field[startPositon.getVertical()][startPositon.getHorizontal()] == 0){
 				field[startPositon.getVertical()][startPositon.getHorizontal()] = ship;
+			}
 			//to the right
-			if(direction == 0){
+			if(direction == 1){
 				startPositon.verschiebe(+1, 0);
 			}
 			//to the left
-			else if(direction == 1){
+			else if(direction == -1){
 				startPositon.verschiebe(-1, 0);
 			}
 			//up 
-			else if(direction == 2){
+			else if(direction == -2){
 				startPositon.verschiebe(0, -1);
 			}
 			//down
-			else{
+			else if(direction == 2){
 				startPositon.verschiebe(0, +1);
-			}
+			}    
 		}
 	}
 	
 	public boolean possibleSet(Position pos, int delta){
 		if(positioning == 2){
-			boolean xPossible = true;
-			for(int i = 0; i <= delta; i++){
-				if(pos.getVertical() > 0 && field[pos.getVertical()-1][pos.getHorizontal()] != 0){
-					xPossible = false;
-					break;
-				}
-				else if(pos.getVertical() < 9 && field[pos.getVertical()+1][pos.getHorizontal()] != 0){
-					xPossible = false;
-					break;
-				}
-			}
-			boolean yPossible = true;
-			for(int i = 0; i <= delta; i++){
-				if(pos.getHorizontal() > 0 && field[pos.getVertical()][pos.getHorizontal()-1] != 0){
-					yPossible = false;
-					break;
-				}
-				else if(pos.getHorizontal() < 9 && field[pos.getVertical()][pos.getHorizontal()+1] != 0){
-					yPossible = false;
-					break;
-				}
-			}
-			if(yPossible || xPossible){
-				return true;
-			}
-			else{
-				return false;
-			}
+			return touchingPositioning(pos, delta);
 		}
+		else if(positioning == 1){
+			return cornersTouchingPositioning(pos, delta);
+		}
+		else if(positioning == 0){
+			return noTouchingPositioning(pos, delta);
+		}
+		return false;
+	}
+	
+	private boolean touchingPositioning(Position pos, int delta){
+		
+		return false;
+	}
+	
+	private boolean cornersTouchingPositioning(Position pos, int delta){
+		return false;
+	}
+	
+	private boolean noTouchingPositioning(Position pos, int delta){
 		return false;
 	}
 	
 	public int possibleDirection(Position pos, int delta){
 		if(positioning == 2){
-			int direction = 0;
-			for(int i = 0; i <= delta; i++)
-				if(pos.getVertical() > 0 && field[pos.getVertical()-1][pos.getHorizontal()] != 0){
-					direction = 1;
-				}
-			for(int i = 0; i <= delta; i++)
-				if(pos.getVertical() < 9 && field[pos.getVertical()+1][pos.getHorizontal()] != 0){
-					direction = 2;
-				}
-			
-			for(int i = 0; i <= delta; i++)
-				if(pos.getHorizontal() > 0 && field[pos.getVertical()][pos.getHorizontal()-1] != 0){
-					direction = 3;
-				}
-			for(int i = 0; i <= delta; i++)
-				if(pos.getHorizontal() < 9 && field[pos.getVertical()][pos.getHorizontal()+1] != 0){
-					direction = -1;
-				}
-			return direction;
+			return touchingDirection(pos, delta);
 		}
+		else if(positioning == 1){
+			return cornersTouchingDirection(pos, delta);
+		}
+		else if(positioning == 0){
+			return noTouchingDirection(pos, delta);
+		}
+			
 		return -1;
+	}
+	
+	private int touchingDirection(Position pos, int delta){
+		//0 as error
+		//1 as to the right 
+		//-1 as to the left
+		//2 as down 
+		//-2 as up
+		
+		
+		return 1;
+	}
+	
+	private int cornersTouchingDirection(Position pos, int delta){
+		return 1;
+	}
+	
+	private int noTouchingDirection(Position pos, int delta){
+		return 1;
 	}
 	
 	public boolean shootOfAi(int x, int y){
@@ -133,7 +133,7 @@ public class Spielfeld {
 		return amountOfShips == 0;
 	}
 	
-	public boolean versenkt(){
+	public boolean shipSunk(){
 		return true;
 	}
 	
@@ -148,7 +148,7 @@ public class Spielfeld {
 	
 	public static void main(String[] args) {
 		Spielfeld test = new Spielfeld(0, 2);
-		test.setShip(5, new Position(4, 4), 0);
+		test.setShip(5, new Position(1, 0), 1);
 		test.printField();
 
 	}
