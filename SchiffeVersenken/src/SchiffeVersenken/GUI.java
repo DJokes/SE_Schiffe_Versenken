@@ -35,7 +35,7 @@ public class GUI {
 	private JComboBox ship_combobox = null;
 	private String ship_number[] = null;
 	private JButton[] leftGridFieldArray = new JButton[100];
-	private JPanel[] rightGridFieldArray = new JPanel[100];
+	private JButton[] rightGridFieldArray = new JButton[100];
 	private boolean fieldArray[][] = new boolean[10][10];
 	private JLabel ship_placement = new JLabel("Schiffe setzen:", SwingConstants.CENTER);
 	private JPanel seperator_down = new JPanel();
@@ -74,7 +74,7 @@ public class GUI {
 
 		for (int i = 0; i < leftGridFieldArray.length; i++) {
 			leftGridFieldArray[i] = new JButton();
-			rightGridFieldArray[i] = new JPanel();
+			rightGridFieldArray[i] = new JButton();
 		}
 
 	}
@@ -350,8 +350,18 @@ public class GUI {
 	}
 
 	private void startGame() {
-		System.out.println("Test");
-
+		Game game = new Game();
+		int nextPlayer = game.determineBeginner();
+		while(!game.isOver()) {
+			if(nextPlayer == 1) {
+				game.shoot();
+				nextPlayer = 2;
+			}
+			else {
+				game.waitForEnemy();
+				nextPlayer = 1;
+			}
+		}
 	}
 
 	public boolean isInField(int x, int y) {
@@ -535,7 +545,7 @@ public class GUI {
 		return leftGridFieldArray;
 	}
 
-	public JPanel[] getRightGridFieldArray() {
+	public JButton[] getRightGridFieldArray() {
 		return rightGridFieldArray;
 	}
 

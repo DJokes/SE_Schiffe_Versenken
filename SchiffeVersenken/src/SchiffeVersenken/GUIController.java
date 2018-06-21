@@ -19,7 +19,7 @@ public class GUIController extends MouseAdapter implements ActionListener, Mouse
 	private JButton ship_placement_ok = null;
 	private JButton reset = null;
 	private JButton[] leftGridFieldArray = null;
-	private JPanel[] rightGridFieldArray = null;
+	private JButton[] rightGridFieldArray = null;
 
 	public GUIController(GUI gui) {
 		this.gui = gui;
