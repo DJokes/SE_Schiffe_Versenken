@@ -6,10 +6,7 @@ public class MemoryField {
 	int maxY;
 	
 	public MemoryField(){
-		super();
-		this.field = new boolean[10][10];
-		this.maxX = 10;
-		this.maxY = 10;
+		this(10,10);
 	}
 	
 	public MemoryField(int x, int y){
@@ -83,7 +80,7 @@ public class MemoryField {
 		String fieldString = "";
 		for(int line=0; line < this.maxY; line++){
 			for(int column=0; column < this.maxX; column++){
-				if(getValue(line, column)){
+				if(getValue(column, line)){
 					fieldString += "[X]";//.concat(new String("[X]"));//X for true/hit
 				} else{
 					fieldString += "[0]";//.concat(new String("[0]"));//0 for false
