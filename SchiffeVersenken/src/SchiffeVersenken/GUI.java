@@ -252,68 +252,215 @@ public class GUI {
 		
 	}
 	
-	public void placeShip() {
+	public boolean placeShip(int x, int y) {
 		
-		int ship_size = Integer.parseInt((String)ship_combobox.getSelectedItem());
+//		int ship_size = Integer.parseInt((String)ship_combobox.getSelectedItem());
+//		
+//		JFrame popup = new JFrame("Vorbereitungen");
+//		popup.setLayout(new GridLayout(ship_size+2,1));
+//	    
+//	    JLabel headline = new JLabel("Schiff ("+ship_size+") setzen:", SwingConstants.CENTER);
+//	    headline.setFont(new Font("Serif", Font.PLAIN, 20));
+//	    popup.add(headline);
+//	    
+//	    JTextField[] textfields = new JTextField[ship_size];
+//	    for(int i = 0; i < ship_size; i++) {
+//	    	textfields[i] = new JTextField();
+//	    	popup.add(textfields[i]);
+//	    }
+//	    
+//	    JButton close = new JButton("Fertig");
+//	    close.addActionListener(new ActionListener() { 
+//	    	  public void actionPerformed(ActionEvent e) {
+//				  
+//	    		  for(int i = 0; i < ship_size; i++) {
+//	    			  try {
+//	    				  int index = Integer.parseInt(textfields[i].getText());
+//	    				  
+//	    				  if(index <= 99 && index >= 0) {
+//	    					 System.out.println(index);
+//	    					  changeGrid(0, 0, index);
+//	    				  }
+//	    				  
+//	    				  if(i == (ship_size-1)) {
+//	    					  ship_combobox.removeItem(""+ship_size);
+//	    					  if(ship_combobox.getItemCount() <= 0) {
+//	    						  
+//	    			    		  seperator_down.setVisible(false);
+//	    			    		  seperator_up.setVisible(false);
+//	    			    		  ship_combobox.setVisible(false);
+//	    			    		  ship_placement_ok.setVisible(false);
+//	    			    		  ship_placement.setVisible(false);
+//	    						  
+//	    						  seperator.setVisible(true);
+//	    						  
+//	    					  }
+//	    				  }
+//
+//	    			  } catch(Exception e1) {
+//	    				  popup.dispose();
+//	    			  }
+//	    		  }
+//	    		  popup.dispose();
+//	    		  
+//	    	  } 
+//	    });
+//	    popup.add(close);
+//	    	   
+//	    popup.setUndecorated(true);
+//	    popup.setSize(RULES_WIDTH, RULES_HEIGHT);
+//	    popup.setResizable(false);
+//	    popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//	    popup.setLocationRelativeTo(null);
+//	    popup.setVisible(true);        
+//	
+		if(summe > 0) {
+			if(setzen) {
+				int diffX = x - firstX;
+				int diffY = y - firstY;
+				
+				if(Math.abs(diffX) < currentShipSize && Math.abs(diffY) < currentShipSize) {
+					if(diffX == 0 ^ diffY == 0) {
+						shiffeImRaster[firstX][firstY] = false;
 		
-		JFrame popup = new JFrame("Vorbereitungen");
-		popup.setLayout(new GridLayout(ship_size+2,1));
-	    
-	    JLabel headline = new JLabel("Schiff ("+ship_size+") setzen:", SwingConstants.CENTER);
-	    headline.setFont(new Font("Serif", Font.PLAIN, 20));
-	    popup.add(headline);
-	    
-	    JTextField[] textfields = new JTextField[ship_size];
-	    for(int i = 0; i < ship_size; i++) {
-	    	textfields[i] = new JTextField();
-	    	popup.add(textfields[i]);
-	    }
-	    
-	    JButton close = new JButton("Fertig");
-	    close.addActionListener(new ActionListener() { 
-	    	  public void actionPerformed(ActionEvent e) {
-				  
-	    		  for(int i = 0; i < ship_size; i++) {
-	    			  try {
-	    				  int index = Integer.parseInt(textfields[i].getText());
-	    				  
-	    				  if(index <= 99 && index >= 0) {
-	    					 System.out.println(index);
-	    					  changeGrid(0, 0, index);
-	    				  }
-	    				  
-	    				  if(i == (ship_size-1)) {
-	    					  ship_combobox.removeItem(""+ship_size);
-	    					  if(ship_combobox.getItemCount() <= 0) {
-	    						  
-	    			    		  seperator_down.setVisible(false);
-	    			    		  seperator_up.setVisible(false);
-	    			    		  ship_combobox.setVisible(false);
-	    			    		  ship_placement_ok.setVisible(false);
-	    			    		  ship_placement.setVisible(false);
-	    						  
-	    						  seperator.setVisible(true);
-	    						  
-	    					  }
-	    				  }
-
-	    			  } catch(Exception e1) {
-	    				  popup.dispose();
-	    			  }
-	    		  }
-	    		  popup.dispose();
-	    		  
-	    	  } 
-	    });
-	    popup.add(close);
-	    	   
-	    popup.setUndecorated(true);
-	    popup.setSize(RULES_WIDTH, RULES_HEIGHT);
-	    popup.setResizable(false);
-	    popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    popup.setLocationRelativeTo(null);
-	    popup.setVisible(true);        
+						boolean isValid = true;
+						
+						for(int i = 0; i < currentShipSize; i++) {
+							if (!isFieldValidate(firstX + (diffX != 0 ? (int)Math.copySign(i, diffX) : 0), firstY + (diffY != 0 ? (int)Math.copySign(i, diffY) : 0))) {
+								isValid = false;
+								break;
+							}
+						}
+						
+						if(isValid) {
+							for(int i = 0; i < currentShipSize; i++) {
+								shiffeImRaster[firstX + (diffX != 0 ? (int)Math.copySign(i, diffX) : 0)][firstY + (diffY != 0 ? (int)Math.copySign(i, diffY) : 0)] = true;
+								buttons[firstX + (diffX != 0 ? (int)Math.copySign(i, diffX) : 0)][firstY + (diffY != 0 ? (int)Math.copySign(i, diffY) : 0)].setBackground(Color.GREEN);
+							}
+							
+							setzen = false;
+							summe -= currentShipSize;
+							updateShipLegend();
+							currentShipSize = getNextShipSize();
+						}else {
+							shiffeImRaster[firstX][firstY] = true;	
+						}
+					}
+				}
+			}else {
+				if(isShipSizeValidate(x, y, currentShipSize)) {
+					setzen = true;
+					firstX = x;
+					firstY = y;
+					shiffeImRaster[x][y] = true;
+					buttons[x][y].setBackground(Color.GREEN);
+					lblNewLabel.setText("" + summe);
+					return true;
+				}	
+			}
+		}
 		
+		if(summe == 0) {
+			startGame();
+		}
+		
+		return false;
+	}
+	
+	public boolean isInField(int x, int y) {
+		if (x >= 0 && x < shiffeImRaster.length) {
+			if (y >= 0 && y < shiffeImRaster[0].length) {
+				return true;				
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isFieldValidate(int x, int y) {
+		if(isInField(x, y) && !shiffeImRaster[x][y]) {
+			if(isInField(x-1, y)) {
+				if(shiffeImRaster[x-1][y]) {
+					return false;
+				}
+			}
+			if(isInField(x, y-1)) {
+				if(shiffeImRaster[x][y-1]) {
+					return false;
+				}
+			}
+			if(isInField(x+1, y)) {
+				if(shiffeImRaster[x+1][y]) {
+					return false;
+				}
+			}
+			if(isInField(x, y+1)) {
+				if(shiffeImRaster[x][y+1]) {
+					return false;
+				}
+			}
+		}else {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean isShipSizeValidate(int x, int y, int size) {
+		if(isFieldValidate(x, y)) {
+			//1 da eigenes nicht mit gepr�ft werden muss
+			int possibleFields = 1;
+			
+			//X-achse links
+			for(int i = 1; i < size && isFieldValidate(x-i, y); i++) {
+				possibleFields++;
+			}
+			
+			//X-achse rechts
+			for(int i = 1; i < size && isFieldValidate(x+i, y); i++) {
+				possibleFields++;
+			}
+			
+			if(possibleFields >= size) {
+				return true;
+			}else {
+				//1 da eigenes nicht mit gepr�ft werden muss
+				possibleFields = 1;
+				
+				//Y-achse links
+				for(int i = 1; i < size && isFieldValidate(x, y-i); i++) {
+					possibleFields++;
+				}
+				
+				//Y-achse rechts
+				for(int i = 1; i < size && isFieldValidate(x, y+i); i++) {
+					possibleFields++;
+				}
+				
+				if(possibleFields >= size) {
+					return true;
+				}	
+			}
+		}
+		return false;
+	}
+	
+	private int getNextShipSize() {
+		if(availableSchlachtschiffe > 0) {
+			availableSchlachtschiffe--;
+			return 5;
+		} else if(availablekreuzer > 0) {
+			availablekreuzer--;
+			return 4;
+		} else if(availableZerstoerer > 0) {
+			availableZerstoerer--;
+			return 3;
+		} else if(availableUBoots > 0) {
+			availableUBoots--;
+			return 2;
+		}
+		
+		return 0;
 	}
 	
 	public void setPlayerScore(int score) {
