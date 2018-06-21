@@ -96,8 +96,8 @@ public class GUIController extends MouseAdapter implements ActionListener, Mouse
 	@Override
 	public void mousePressed(MouseEvent e) {
 		
-		gui.changeGrid(0, 2, 0);
-        gui.changeGrid(1, 2, 99);
+		//gui.changeGrid(0, 2, 0);
+        //gui.changeGrid(1, 2, 99);
 		
 		for(int i = 0; i < leftGridFieldArray.length; i++) {
 			if(e.getSource() == leftGridFieldArray[i]) {

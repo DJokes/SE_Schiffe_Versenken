@@ -171,36 +171,36 @@ public class GUI {
         rightGridScore.setFont(new Font("Serif", Font.PLAIN, 24));
         gameFrame.add(rightGridScore);
         
-        // Init left field
-        changeGrid(0, 0, 22);
-        changeGrid(0, 0, 23);
-        changeGrid(0, 0, 24);
-        
-        changeGrid(0, 2, 33);
-        changeGrid(0, 2, 42);
-        changeGrid(0, 2, 55);
-        
-        changeGrid(0, 3, 24);
-        
-        changeGrid(0, 4, 88);
-        changeGrid(0, 4, 89);
-        
-        setPlayerScore(100);
-        
-        // Init right field
-        changeGrid(1, 0, 22);
-        changeGrid(1, 0, 23);
-        changeGrid(1, 0, 24);
-        
-        changeGrid(1, 2, 33);
-        changeGrid(1, 2, 42);
-        changeGrid(1, 2, 55);
-        
-        changeGrid(1, 3, 24);
-        
-        changeGrid(1, 4, 88);
-        changeGrid(1, 4, 89);
-        
+//        // Init left field
+//        changeGrid(0, 1, 22);
+//        changeGrid(0, 1, 23);
+//        changeGrid(0, 1, 24);
+//        
+//        changeGrid(0, 1, 33);
+//        changeGrid(0, 1, 42);
+//        changeGrid(0, 1, 55);
+//        
+//        changeGrid(0, 1, 24);
+//        
+//        changeGrid(0, 1, 88);
+//        changeGrid(0, 1, 89);
+//        
+//        setPlayerScore(100);
+//        
+//        // Init right field
+//        changeGrid(1, 1, 22);
+//        changeGrid(1, 1, 23);
+//        changeGrid(1, 1, 24);
+//        
+//        changeGrid(1, 2, 33);
+//        changeGrid(1, 2, 42);
+//        changeGrid(1, 2, 55);
+//        
+//        changeGrid(1, 2, 24);
+//        
+//        changeGrid(1, 2, 88);
+//        changeGrid(1, 2, 89);
+//        
         setOpponentScore(0);
 	    
 		gameFrame.setSize(GAME_WIDTH, GAME_HEIGHT);
@@ -212,22 +212,20 @@ public class GUI {
 	}
 	
 	// First param: leftGrid(0) rightGrid(1)
-	// Second param: ship(0) water(1) shotWater(2) shotShip(3) shipKilled(4)
+	// Second param: water(0) ship(1) shotShip(2) shotwater(3)
 	// Third param: index of grid
 	public void changeGrid(int grid, int art, int index) {
 		
 		if(grid == 0) {
 			
 			switch(art) {
-			case 0: leftGridFieldArray[index].setBackground(Color.black);
+			case 0: leftGridFieldArray[index].setBackground(Color.blue);
 				break;
-			case 1: leftGridFieldArray[index].setBackground(Color.blue);
+			case 1: leftGridFieldArray[index].setBackground(Color.black);
 				break;
-			case 2: leftGridFieldArray[index].setBackground(Color.green);
+			case 2: leftGridFieldArray[index].setBackground(Color.red);
 				break;
 			case 3: leftGridFieldArray[index].setBackground(Color.yellow);
-				break;
-			case 4: leftGridFieldArray[index].setBackground(Color.red);
 				break;
 			default: 
 				System.exit(0);
@@ -236,15 +234,13 @@ public class GUI {
 		} else if(grid == 1) {
 			
 			switch(art) {
-			case 0: rightGridFieldArray[index].setBackground(Color.black);
+			case 0: rightGridFieldArray[index].setBackground(Color.blue);
 				break;
-			case 1: rightGridFieldArray[index].setBackground(Color.blue);
+			case 1: rightGridFieldArray[index].setBackground(Color.black);
 				break;
-			case 2: rightGridFieldArray[index].setBackground(Color.green);
+			case 2: rightGridFieldArray[index].setBackground(Color.red);
 				break;
 			case 3: rightGridFieldArray[index].setBackground(Color.yellow);
-				break;
-			case 4: rightGridFieldArray[index].setBackground(Color.red);
 				break;
 			default: 
 				System.exit(0);
@@ -282,6 +278,7 @@ public class GUI {
 	    				  int index = Integer.parseInt(textfields[i].getText());
 	    				  
 	    				  if(index <= 99 && index >= 0) {
+	    					 System.out.println(index);
 	    					  changeGrid(0, 0, index);
 	    				  }
 	    				  
