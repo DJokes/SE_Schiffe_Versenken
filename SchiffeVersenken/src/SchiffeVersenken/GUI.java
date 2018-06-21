@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 public class GUI {
-	
+
 	private Spiel game = null;
 	private JFrame ruleFrame = null;
 	private JFrame gameFrame = null;
@@ -28,499 +28,459 @@ public class GUI {
 	private JButton opt3 = new JButton("Wasser");
 	private JButton opt4 = new JButton("Ecken");
 	private JButton opt5 = new JButton("Ber\u00fchren");
-	private JButton ship_placement_ok = new JButton("Setzen");
+	// private JButton ship_placement_ok = new JButton("Setzen");
 	private JLabel leftGridScore = new JLabel("", SwingConstants.CENTER);
 	private JLabel rightGridScore = new JLabel("", SwingConstants.CENTER);
 	private JComboBox ship_combobox = null;
 	private String ship_number[] = null;
-	private JPanel[] leftGridFieldArray = new JPanel[100];		
+	private JButton[] leftGridFieldArray = new JButton[100];
 	private JPanel[] rightGridFieldArray = new JPanel[100];
+	private boolean fieldArray[][] = new boolean[10][10];
 	private JLabel ship_placement = new JLabel("Schiffe setzen:", SwingConstants.CENTER);
 	private JPanel seperator_down = new JPanel();
 	private JPanel seperator_up = new JPanel();
 	private JPanel seperator = new JPanel();
-	
+	private boolean setzen = false;
 
 	// Danke, Maze :D
 	public GUI(Spiel game) {
 		this.game = game;
 	}
-	
+
 	public void openFirstRulesFrame() {
-		
+
 		ruleFrame = new JFrame("Einstellungen");
-	    ruleFrame.setLayout(new GridLayout(3,1));
-	    
-	    JLabel headline = new JLabel("Spielregeln ausw\u00e4hlen (1):", SwingConstants.CENTER);
-	    headline.setFont(new Font("Serif", Font.PLAIN, 20));
-	    
-	    ruleFrame.add(headline);
-	   
-	    ruleFrame.add(opt1);
-	    ruleFrame.add(opt2);
-	    
-	    ruleFrame.setSize(RULES_WIDTH, RULES_HEIGHT);
-	    ruleFrame.setResizable(false);
-	    ruleFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    ruleFrame.setLocationRelativeTo(null);
-	    ruleFrame.setVisible(true);
-	    
-	    for(int i = 0; i < leftGridFieldArray.length; i++) {
-	    	leftGridFieldArray[i] = new JPanel();
-	    	rightGridFieldArray[i] = new JPanel();
-	    }
-	    
+		ruleFrame.setLayout(new GridLayout(3, 1));
+
+		JLabel headline = new JLabel("Spielregeln ausw\u00e4hlen (1):", SwingConstants.CENTER);
+		headline.setFont(new Font("Serif", Font.PLAIN, 20));
+
+		ruleFrame.add(headline);
+
+		ruleFrame.add(opt1);
+		ruleFrame.add(opt2);
+
+		ruleFrame.setSize(RULES_WIDTH, RULES_HEIGHT);
+		ruleFrame.setResizable(false);
+		ruleFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		ruleFrame.setLocationRelativeTo(null);
+		ruleFrame.setVisible(true);
+
+		for (int i = 0; i < leftGridFieldArray.length; i++) {
+			leftGridFieldArray[i] = new JButton();
+			rightGridFieldArray[i] = new JPanel();
+		}
+
 	}
-	
+
 	public void openSecondRulesFrame() {
-		
-		ruleFrame.setLayout(new GridLayout(4,1));
-		
+
+		ruleFrame.setLayout(new GridLayout(4, 1));
+
 		JLabel headline = new JLabel("Spielregeln ausw\u00e4hlen (2):", SwingConstants.CENTER);
-	    headline.setFont(new Font("Serif", Font.PLAIN, 20));
-	    
-	    ruleFrame.add(headline);
-	    
-	    ruleFrame.add(opt3);
-	    ruleFrame.add(opt4);
-	    ruleFrame.add(opt5);
-	    
-	    showRulesElements();
-	    
+		headline.setFont(new Font("Serif", Font.PLAIN, 20));
+
+		ruleFrame.add(headline);
+
+		ruleFrame.add(opt3);
+		ruleFrame.add(opt4);
+		ruleFrame.add(opt5);
+
+		showRulesElements();
+
 	}
-	
+
 	public void openGameFrame() {
-		
+
 		gameFrame = new JFrame("Schiffe versenken");
 		gameFrame.setLayout(null);
-		
+
 		JLabel leftGridHeadline = new JLabel("Dein Spielfeld:", SwingConstants.CENTER);
-		leftGridHeadline.setSize(250,50);
+		leftGridHeadline.setSize(250, 50);
 		leftGridHeadline.setLocation(50, 50);
-        leftGridHeadline.setFont(new Font("Serif", Font.PLAIN, 24));
-        gameFrame.add(leftGridHeadline);
-		
+		leftGridHeadline.setFont(new Font("Serif", Font.PLAIN, 24));
+		gameFrame.add(leftGridHeadline);
+
 		JPanel leftGridField = new JPanel();
-		leftGridField.setSize(250,250);
+		leftGridField.setSize(250, 250);
 		leftGridField.setLocation(50, 125);
-        leftGridField.setLayout(new GridLayout(10,10));
-        gameFrame.add(leftGridField);
-        
-        for(int i = 0; i < leftGridFieldArray.length; i++) {
-        	leftGridFieldArray[i].setBorder(BorderFactory.createLineBorder(Color.white)); 
-        	leftGridFieldArray[i].setBackground(Color.blue);
-        	leftGridField.add(leftGridFieldArray[i]);
-        }
-        
-        leftGridScore.setSize(250,50);
-        leftGridScore.setLocation(50, 400);
-        leftGridScore.setFont(new Font("Serif", Font.PLAIN, 24));
-        gameFrame.add(leftGridScore);
-        
-        seperator.setSize(10, 500);
-        seperator.setLocation((1000/2)-5, 0);
-        seperator.setBackground(Color.black);
-        seperator.setVisible(false);
-        gameFrame.add(seperator);
-        
-        seperator_up.setSize(10, 150);
-        seperator_up.setLocation((1000/2)-5, 0);
-        seperator_up.setBackground(Color.black);
-        gameFrame.add(seperator_up);
-        
-        ship_placement.setSize(200,50);
-        ship_placement.setLocation((1000/2)-100, 180);
-        ship_placement.setFont(new Font("Serif", Font.PLAIN, 20));
-        gameFrame.add(ship_placement);
-        
-        setShipNumber(5);
-        ship_combobox = new JComboBox(ship_number);
-        ship_combobox.setSize(100, 50);
-        ship_combobox.setLocation((1000/2)-50, 215);
-        gameFrame.add(ship_combobox);
-        
-        ship_placement_ok.setSize(100,35);
-        ship_placement_ok.setLocation((1000/2)-50, 260);
-        gameFrame.add(ship_placement_ok);
-        
-        seperator_down.setSize(10, 150);
-        seperator_down.setLocation((1000/2)-5, 330);
-        seperator_down.setBackground(Color.black);
-        gameFrame.add(seperator_down);
-        
-        JLabel rightGridHeadline = new JLabel("Gegner Spielfeld:", SwingConstants.CENTER);
-        rightGridHeadline.setSize(250,50);
-        rightGridHeadline.setLocation(1000-50-250, 50);
-        rightGridHeadline.setFont(new Font("Serif", Font.PLAIN, 24));
-        gameFrame.add(rightGridHeadline);
-		
+		leftGridField.setLayout(new GridLayout(10, 10));
+		gameFrame.add(leftGridField);
+
+		for (int i = 0; i < leftGridFieldArray.length; i++) {
+			leftGridFieldArray[i].setBorder(BorderFactory.createLineBorder(Color.white));
+			leftGridFieldArray[i].setBackground(Color.blue);
+			leftGridField.add(leftGridFieldArray[i]);
+		}
+
+		leftGridScore.setSize(250, 50);
+		leftGridScore.setLocation(50, 400);
+		leftGridScore.setFont(new Font("Serif", Font.PLAIN, 24));
+		gameFrame.add(leftGridScore);
+
+		seperator.setSize(10, 500);
+		seperator.setLocation((1000 / 2) - 5, 0);
+		seperator.setBackground(Color.black);
+		seperator.setVisible(false);
+		gameFrame.add(seperator);
+
+		seperator_up.setSize(10, 150);
+		seperator_up.setLocation((1000 / 2) - 5, 0);
+		seperator_up.setBackground(Color.black);
+		gameFrame.add(seperator_up);
+
+		ship_placement.setSize(200, 50);
+		ship_placement.setLocation((1000 / 2) - 100, 180);
+		ship_placement.setFont(new Font("Serif", Font.PLAIN, 20));
+		gameFrame.add(ship_placement);
+
+		setShipNumber(5);
+		ship_combobox = new JComboBox(ship_number);
+		ship_combobox.setSize(100, 50);
+		ship_combobox.setLocation((1000 / 2) - 50, 215);
+		gameFrame.add(ship_combobox);
+
+		// ship_placement_ok.setSize(100,35);
+		// ship_placement_ok.setLocation((1000/2)-50, 260);
+		// gameFrame.add(ship_placement_ok);
+
+		seperator_down.setSize(10, 150);
+		seperator_down.setLocation((1000 / 2) - 5, 330);
+		seperator_down.setBackground(Color.black);
+		gameFrame.add(seperator_down);
+
+		JLabel rightGridHeadline = new JLabel("Gegner Spielfeld:", SwingConstants.CENTER);
+		rightGridHeadline.setSize(250, 50);
+		rightGridHeadline.setLocation(1000 - 50 - 250, 50);
+		rightGridHeadline.setFont(new Font("Serif", Font.PLAIN, 24));
+		gameFrame.add(rightGridHeadline);
+
 		JPanel rightGridField = new JPanel();
-		rightGridField.setSize(250,250);
-		rightGridField.setLocation(1000-50-250, 125);
-		rightGridField.setLayout(new GridLayout(10,10));
-        gameFrame.add(rightGridField);
-        
-        for(int i = 0; i < rightGridFieldArray.length; i++) {
-        	rightGridFieldArray[i].setBorder(BorderFactory.createLineBorder(Color.white));
-        	rightGridFieldArray[i].setBackground(Color.blue);
-        	rightGridField.add(rightGridFieldArray[i]);
-        }
-        
-        rightGridScore.setSize(250,50);
-        rightGridScore.setLocation(1000-50-250, 400);
-        rightGridScore.setFont(new Font("Serif", Font.PLAIN, 24));
-        gameFrame.add(rightGridScore);
-        
-//        // Init left field
-//        changeGrid(0, 1, 22);
-//        changeGrid(0, 1, 23);
-//        changeGrid(0, 1, 24);
-//        
-//        changeGrid(0, 1, 33);
-//        changeGrid(0, 1, 42);
-//        changeGrid(0, 1, 55);
-//        
-//        changeGrid(0, 1, 24);
-//        
-//        changeGrid(0, 1, 88);
-//        changeGrid(0, 1, 89);
-//        
-//        setPlayerScore(100);
-//        
-//        // Init right field
-//        changeGrid(1, 1, 22);
-//        changeGrid(1, 1, 23);
-//        changeGrid(1, 1, 24);
-//        
-//        changeGrid(1, 2, 33);
-//        changeGrid(1, 2, 42);
-//        changeGrid(1, 2, 55);
-//        
-//        changeGrid(1, 2, 24);
-//        
-//        changeGrid(1, 2, 88);
-//        changeGrid(1, 2, 89);
-//        
-        setOpponentScore(0);
-	    
+		rightGridField.setSize(250, 250);
+		rightGridField.setLocation(1000 - 50 - 250, 125);
+		rightGridField.setLayout(new GridLayout(10, 10));
+		gameFrame.add(rightGridField);
+
+		for (int i = 0; i < rightGridFieldArray.length; i++) {
+			rightGridFieldArray[i].setBorder(BorderFactory.createLineBorder(Color.white));
+			rightGridFieldArray[i].setBackground(Color.blue);
+			rightGridField.add(rightGridFieldArray[i]);
+		}
+
+		rightGridScore.setSize(250, 50);
+		rightGridScore.setLocation(1000 - 50 - 250, 400);
+		rightGridScore.setFont(new Font("Serif", Font.PLAIN, 24));
+		gameFrame.add(rightGridScore);
+
+		// // Init left field
+		// changeGrid(0, 1, 22);
+		// changeGrid(0, 1, 23);
+		// changeGrid(0, 1, 24);
+		//
+		// changeGrid(0, 1, 33);
+		// changeGrid(0, 1, 42);
+		// changeGrid(0, 1, 55);
+		//
+		// changeGrid(0, 1, 24);
+		//
+		// changeGrid(0, 1, 88);
+		// changeGrid(0, 1, 89);
+		//
+		// setPlayerScore(100);
+		//
+		// // Init right field
+		// changeGrid(1, 1, 22);
+		// changeGrid(1, 1, 23);
+		// changeGrid(1, 1, 24);
+		//
+		// changeGrid(1, 2, 33);
+		// changeGrid(1, 2, 42);
+		// changeGrid(1, 2, 55);
+		//
+		// changeGrid(1, 2, 24);
+		//
+		// changeGrid(1, 2, 88);
+		// changeGrid(1, 2, 89);
+		//
+		setOpponentScore(0);
+
 		gameFrame.setSize(GAME_WIDTH, GAME_HEIGHT);
-	    gameFrame.setResizable(false);
-	    gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    gameFrame.setLocationRelativeTo(null);
-	    gameFrame.setVisible(true);
-	    
+		gameFrame.setResizable(false);
+		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gameFrame.setLocationRelativeTo(null);
+		gameFrame.setVisible(true);
+
 	}
-	
+
 	// First param: leftGrid(0) rightGrid(1)
 	// Second param: water(0) ship(1) shotShip(2) shotwater(3)
 	// Third param: index of grid
 	public void changeGrid(int grid, int art, int index) {
-		
-		if(grid == 0) {
-			
-			switch(art) {
-			case 0: leftGridFieldArray[index].setBackground(Color.blue);
+
+		if (grid == 0) {
+
+			switch (art) {
+			case 0:
+				leftGridFieldArray[index].setBackground(Color.blue);
 				break;
-			case 1: leftGridFieldArray[index].setBackground(Color.black);
+			case 1:
+				leftGridFieldArray[index].setBackground(Color.black);
 				break;
-			case 2: leftGridFieldArray[index].setBackground(Color.red);
+			case 2:
+				leftGridFieldArray[index].setBackground(Color.red);
 				break;
-			case 3: leftGridFieldArray[index].setBackground(Color.yellow);
+			case 3:
+				leftGridFieldArray[index].setBackground(Color.yellow);
 				break;
-			default: 
+			default:
 				System.exit(0);
 			}
-			
-		} else if(grid == 1) {
-			
-			switch(art) {
-			case 0: rightGridFieldArray[index].setBackground(Color.blue);
+
+		} else if (grid == 1) {
+
+			switch (art) {
+			case 0:
+				rightGridFieldArray[index].setBackground(Color.blue);
 				break;
-			case 1: rightGridFieldArray[index].setBackground(Color.black);
+			case 1:
+				rightGridFieldArray[index].setBackground(Color.black);
 				break;
-			case 2: rightGridFieldArray[index].setBackground(Color.red);
+			case 2:
+				rightGridFieldArray[index].setBackground(Color.red);
 				break;
-			case 3: rightGridFieldArray[index].setBackground(Color.yellow);
+			case 3:
+				rightGridFieldArray[index].setBackground(Color.yellow);
 				break;
-			default: 
+			default:
 				System.exit(0);
 			}
-			
+
 		} else {
 			System.exit(0);
 		}
-		
+
 	}
-	
-	public boolean placeShip(int x, int y) {
+
+	public boolean placeShip(int index) {
+
+		int ship_size = Integer.parseInt((String) ship_combobox.getSelectedItem());
 		
-//		int ship_size = Integer.parseInt((String)ship_combobox.getSelectedItem());
-//		
-//		JFrame popup = new JFrame("Vorbereitungen");
-//		popup.setLayout(new GridLayout(ship_size+2,1));
-//	    
-//	    JLabel headline = new JLabel("Schiff ("+ship_size+") setzen:", SwingConstants.CENTER);
-//	    headline.setFont(new Font("Serif", Font.PLAIN, 20));
-//	    popup.add(headline);
-//	    
-//	    JTextField[] textfields = new JTextField[ship_size];
-//	    for(int i = 0; i < ship_size; i++) {
-//	    	textfields[i] = new JTextField();
-//	    	popup.add(textfields[i]);
-//	    }
-//	    
-//	    JButton close = new JButton("Fertig");
-//	    close.addActionListener(new ActionListener() { 
-//	    	  public void actionPerformed(ActionEvent e) {
-//				  
-//	    		  for(int i = 0; i < ship_size; i++) {
-//	    			  try {
-//	    				  int index = Integer.parseInt(textfields[i].getText());
-//	    				  
-//	    				  if(index <= 99 && index >= 0) {
-//	    					 System.out.println(index);
-//	    					  changeGrid(0, 0, index);
-//	    				  }
-//	    				  
-//	    				  if(i == (ship_size-1)) {
-//	    					  ship_combobox.removeItem(""+ship_size);
-//	    					  if(ship_combobox.getItemCount() <= 0) {
-//	    						  
-//	    			    		  seperator_down.setVisible(false);
-//	    			    		  seperator_up.setVisible(false);
-//	    			    		  ship_combobox.setVisible(false);
-//	    			    		  ship_placement_ok.setVisible(false);
-//	    			    		  ship_placement.setVisible(false);
-//	    						  
-//	    						  seperator.setVisible(true);
-//	    						  
-//	    					  }
-//	    				  }
-//
-//	    			  } catch(Exception e1) {
-//	    				  popup.dispose();
-//	    			  }
-//	    		  }
-//	    		  popup.dispose();
-//	    		  
-//	    	  } 
-//	    });
-//	    popup.add(close);
-//	    	   
-//	    popup.setUndecorated(true);
-//	    popup.setSize(RULES_WIDTH, RULES_HEIGHT);
-//	    popup.setResizable(false);
-//	    popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//	    popup.setLocationRelativeTo(null);
-//	    popup.setVisible(true);        
-//	
-		if(summe > 0) {
-			if(setzen) {
-				int diffX = x - firstX;
-				int diffY = y - firstY;
-				
-				if(Math.abs(diffX) < currentShipSize && Math.abs(diffY) < currentShipSize) {
-					if(diffX == 0 ^ diffY == 0) {
-						shiffeImRaster[firstX][firstY] = false;
-		
-						boolean isValid = true;
-						
-						for(int i = 0; i < currentShipSize; i++) {
-							if (!isFieldValidate(firstX + (diffX != 0 ? (int)Math.copySign(i, diffX) : 0), firstY + (diffY != 0 ? (int)Math.copySign(i, diffY) : 0))) {
-								isValid = false;
-								break;
-							}
-						}
-						
-						if(isValid) {
-							for(int i = 0; i < currentShipSize; i++) {
-								shiffeImRaster[firstX + (diffX != 0 ? (int)Math.copySign(i, diffX) : 0)][firstY + (diffY != 0 ? (int)Math.copySign(i, diffY) : 0)] = true;
-								buttons[firstX + (diffX != 0 ? (int)Math.copySign(i, diffX) : 0)][firstY + (diffY != 0 ? (int)Math.copySign(i, diffY) : 0)].setBackground(Color.GREEN);
-							}
-							
-							setzen = false;
-							summe -= currentShipSize;
-							updateShipLegend();
-							currentShipSize = getNextShipSize();
-						}else {
-							shiffeImRaster[firstX][firstY] = true;	
-						}
-					}
+		// if(summe > 0) {
+		if (setzen) {
+			int diffX = index - index % 10;
+			int diffY = index - index / 10;
+			int firstX = index % 10;
+			int firstY = index / 10;
+			System.out.println(firstX + firstY);
+			boolean isValid = false;
+			//
+			if (Math.abs(diffX) < ship_size && Math.abs(diffY) < ship_size) {
+				if (diffX == 0 ^ diffY == 0) {
+					fieldArray[firstX][firstY] = false;
+
+					isValid = true;
 				}
-			}else {
-				if(isShipSizeValidate(x, y, currentShipSize)) {
-					setzen = true;
-					firstX = x;
-					firstY = y;
-					shiffeImRaster[x][y] = true;
-					buttons[x][y].setBackground(Color.GREEN);
-					lblNewLabel.setText("" + summe);
-					return true;
-				}	
+			}
+			for (int i = 0; i < ship_size; i++) {
+				if (!isFieldValidate(firstX + (diffX != 0 ? (int) Math.copySign(i, diffX) : 0),
+						firstY + (diffY != 0 ? (int) Math.copySign(i, diffY) : 0))) {
+					isValid = false;
+					break;
+				}
+			}
+
+			if (isValid) {
+				for (int i = 0; i < ship_size; i++) {
+					fieldArray[firstX + (diffX != 0 ? (int) Math.copySign(i, diffX) : 0)][firstY
+							+ (diffY != 0 ? (int) Math.copySign(i, diffY) : 0)] = true;
+					leftGridFieldArray[firstX + (diffX != 0 ? (int) Math.copySign(i, diffX) : 0)+(firstY
+							+ (diffY != 0 ? (int) Math.copySign(i, diffY) : 0))*10].setBackground(Color.GREEN);
+				}
+
+				setzen = false;
+//				summe -= ship_size;
+//				updateShipLegend();
+			} else {
+				fieldArray[firstX][firstY] = true;
 			}
 		}
-		
-		if(summe == 0) {
-			startGame();
-		}
-		
-		return false;
-	}
 	
+
+	else
+
+	{
+//		if (isShipSizeValidate(index, ship_size)) {
+			setzen = true;
+			int x = index % 10;
+			int y = index / 10;
+			fieldArray[x][y] = true;
+			leftGridFieldArray[x+(y*10)].setBackground(Color.GREEN);
+//			lblNewLabel.setText("" + summe);
+			return true;}
+
+		return setzen;
+
+		//// if(summe == 0) {
+		// startGame();
+		// }
+	}
+
 	public boolean isInField(int x, int y) {
-		if (x >= 0 && x < shiffeImRaster.length) {
-			if (y >= 0 && y < shiffeImRaster[0].length) {
-				return true;				
+		if (x >= 0 && x < fieldArray.length) {
+			if (y >= 0 && y < fieldArray[0].length) {
+				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public boolean isFieldValidate(int x, int y) {
-		if(isInField(x, y) && !shiffeImRaster[x][y]) {
-			if(isInField(x-1, y)) {
-				if(shiffeImRaster[x-1][y]) {
+		if (isInField(x, y) && !fieldArray[x][y]) {
+			if (isInField(x - 1, y)) {
+				if (fieldArray[x - 1][y]) {
 					return false;
 				}
 			}
-			if(isInField(x, y-1)) {
-				if(shiffeImRaster[x][y-1]) {
+			if (isInField(x, y - 1)) {
+				if (fieldArray[x][y - 1]) {
 					return false;
 				}
 			}
-			if(isInField(x+1, y)) {
-				if(shiffeImRaster[x+1][y]) {
+			if (isInField(x + 1, y)) {
+				if (fieldArray[x + 1][y]) {
 					return false;
 				}
 			}
-			if(isInField(x, y+1)) {
-				if(shiffeImRaster[x][y+1]) {
+			if (isInField(x, y + 1)) {
+				if (fieldArray[x][y + 1]) {
 					return false;
 				}
 			}
-		}else {
+		} else {
 			return false;
 		}
-		
+
 		return true;
+
+		//
+		// public boolean isShipSizeValidate(int x, int y, int size) {
+		// if(isFieldValidate(x, y)) {
+		// //1 da eigenes nicht mit gepr�ft werden muss
+		// int possibleFields = 1;
+		//
+		// //X-achse links
+		// for(int i = 1; i < size && isFieldValidate(x-i, y); i++) {
+		// possibleFields++;
+		// }
+		//
+		// //X-achse rechts
+		// for(int i = 1; i < size && isFieldValidate(x+i, y); i++) {
+		// possibleFields++;
+		// }
+		//
+		// if(possibleFields >= size) {
+		// return true;
+		// }else {
+		// //1 da eigenes nicht mit gepr�ft werden muss
+		// possibleFields = 1;
+		//
+		// //Y-achse links
+		// for(int i = 1; i < size && isFieldValidate(x, y-i); i++) {
+		// possibleFields++;
+		// }
+		//
+		// //Y-achse rechts
+		// for(int i = 1; i < size && isFieldValidate(x, y+i); i++) {
+		// possibleFields++;
+		// }
+		//
+		// if(possibleFields >= size) {
+		// return true;
+		// }
+		// }
+		// }
+		// return false;
+		// }
+		//
+		// private int getNextShipSize() {
+		// if(availableSchlachtschiffe > 0) {
+		// availableSchlachtschiffe--;
+		// return 5;
+		// } else if(availablekreuzer > 0) {
+		// availablekreuzer--;
+		// return 4;
+		// } else if(availableZerstoerer > 0) {
+		// availableZerstoerer--;
+		// return 3;
+		// } else if(availableUBoots > 0) {
+		// availableUBoots--;
+		// return 2;
+		// }
+		//
+		// return 0;
+
 	}
-	
-	public boolean isShipSizeValidate(int x, int y, int size) {
-		if(isFieldValidate(x, y)) {
-			//1 da eigenes nicht mit gepr�ft werden muss
-			int possibleFields = 1;
-			
-			//X-achse links
-			for(int i = 1; i < size && isFieldValidate(x-i, y); i++) {
-				possibleFields++;
-			}
-			
-			//X-achse rechts
-			for(int i = 1; i < size && isFieldValidate(x+i, y); i++) {
-				possibleFields++;
-			}
-			
-			if(possibleFields >= size) {
-				return true;
-			}else {
-				//1 da eigenes nicht mit gepr�ft werden muss
-				possibleFields = 1;
-				
-				//Y-achse links
-				for(int i = 1; i < size && isFieldValidate(x, y-i); i++) {
-					possibleFields++;
-				}
-				
-				//Y-achse rechts
-				for(int i = 1; i < size && isFieldValidate(x, y+i); i++) {
-					possibleFields++;
-				}
-				
-				if(possibleFields >= size) {
-					return true;
-				}	
-			}
-		}
-		return false;
-	}
-	
-	private int getNextShipSize() {
-		if(availableSchlachtschiffe > 0) {
-			availableSchlachtschiffe--;
-			return 5;
-		} else if(availablekreuzer > 0) {
-			availablekreuzer--;
-			return 4;
-		} else if(availableZerstoerer > 0) {
-			availableZerstoerer--;
-			return 3;
-		} else if(availableUBoots > 0) {
-			availableUBoots--;
-			return 2;
-		}
-		
-		return 0;
-	}
-	
+
+	//
 	public void setPlayerScore(int score) {
 		leftGridScore.setText("Dein Score: " + score);
 	}
-	
+
 	public void setOpponentScore(int score) {
 		rightGridScore.setText("Gegner Score: " + score);
 	}
-	
+
 	public void setShipNumber(int number) {
 		ship_number = new String[number];
-		for(int i = 0; i < number; i++)
-			ship_number[i] = "" + (i+1);
+		for (int i = 0; i < number; i++)
+			ship_number[i] = "" + (i + 1);
 	}
-	
+
 	public void removeRulesElements() {
 		ruleFrame.getContentPane().removeAll();
 		ruleFrame.getContentPane().revalidate();
 	}
-	
+
 	public void showRulesElements() {
 		ruleFrame.getContentPane().repaint();
 	}
-	
+
 	public void removeRulesFrame() {
 		ruleFrame.dispose();
 		ruleFrame = null;
 	}
-	
+
 	public JButton getOpt1() {
 		return opt1;
 	}
-	
+
 	public JButton getOpt2() {
 		return opt2;
 	}
-	
+
 	public JButton getOpt3() {
 		return opt3;
 	}
-	
+
 	public JButton getOpt4() {
 		return opt4;
 	}
-	
+
 	public JButton getOpt5() {
 		return opt5;
 	}
-	
-	public JPanel[] getLeftGridFieldArray() {
+
+	public JButton[] getLeftGridFieldArray() {
 		return leftGridFieldArray;
 	}
-	
+
 	public JPanel[] getRightGridFieldArray() {
 		return rightGridFieldArray;
 	}
-	
-	public JButton getShip_placement_ok() {
-		return ship_placement_ok;
-	}
+
+	// public JButton getShip_placement_ok() {
+	// return ship_placement_ok;
+	// }
 
 }
