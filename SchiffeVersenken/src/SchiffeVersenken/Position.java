@@ -79,7 +79,7 @@ public class Position {//doesn't check bounds
 	}
 	
 	public Position up(){//position above
-		return new Position(this.x, this.y + 1);
+		return new Position(this.x, this.y - 1);
 	}
 	
 	public Position right(){//position to the right
@@ -87,7 +87,7 @@ public class Position {//doesn't check bounds
 	}
 	
 	public Position down(){//position below
-		return new Position(this.x, this.y - 1);
+		return new Position(this.x, this.y + 1);
 	}
 	
 	public Position left(){//position to the left
@@ -96,5 +96,9 @@ public class Position {//doesn't check bounds
 	
 	public Position cycle(){//position at the beginning of next line
 		return new Position(0, this.y + 1);
+	}
+	
+	public String toString() {
+		return new String("("+this.getX()+","+this.getY()+")");
 	}
 }
