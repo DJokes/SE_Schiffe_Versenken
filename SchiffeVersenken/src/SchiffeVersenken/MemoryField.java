@@ -30,7 +30,7 @@ public class MemoryField {
 	}
 	
 	public boolean getValue(Position pos){//check bounds before
-		 return this.field[pos.getX()][pos.getY()];
+		 return this.field[pos.getY()][pos.getX()];
 	}
 	
 	public boolean getValue(int x, int y){//check bounds before
