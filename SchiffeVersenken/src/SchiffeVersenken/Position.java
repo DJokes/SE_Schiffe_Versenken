@@ -5,9 +5,19 @@ public class Position {//doesn't check bounds
 	private int x;
 	private int y;
 	
+	public Position(){
+		this.x = 0;
+		this.y = 0;
+	}
+	
 	public Position(int horizontal, int vertical){
 		this.x = horizontal;
 		this.y = vertical;
+	}
+	
+	public Position(Position pos){
+		this.x = pos.x;
+		this.y = pos.y;
 	}
 	
 	public int getX(){
