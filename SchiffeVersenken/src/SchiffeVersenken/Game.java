@@ -10,8 +10,8 @@ public class Game {
 		return (int) (Math.random() * 2) + 1;
 	}
 
-	public void shoot() {
-		// TODO
+	public void shoot(int index) {
+		
 	}
 
 	public boolean isOver() {
