@@ -6,6 +6,7 @@ public class Position {//doesn't check bounds
 	private int y;
 	
 	public Position(){
+		super();
 		this.x = 0;
 		this.y = 0;
 	}
