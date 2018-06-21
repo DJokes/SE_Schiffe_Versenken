@@ -219,7 +219,7 @@ public class Spielfeld {
 	private boolean cornersTouchingPositioning(Position pos, int delta){
 		//Right 
 		Position mover = pos;
-		boolean rightIsPossible = (checkBounds(mover.left()) && getTile(mover.left()) != 0);
+		boolean rightIsPossible = (checkBounds(mover.left()) && getTile(mover.left()) == 0);
 		for(int i = 0; i < delta; i++){
 			if(checkBounds(mover) && shipAround(mover)){
 				rightIsPossible = false;
@@ -232,7 +232,7 @@ public class Spielfeld {
 		
 		//Left 
 		mover = pos;
-		boolean leftIsPossible = (checkBounds(mover.right()) && getTile(mover.right()) != 0);
+		boolean leftIsPossible = (checkBounds(mover.right()) && getTile(mover.right()) == 0);
 		for(int i = 0; i < delta; i++){
 			if(checkBounds(mover) && shipAround(mover)){
 				leftIsPossible = false;
@@ -245,7 +245,7 @@ public class Spielfeld {
 		
 		//Up 
 		mover = pos;
-		boolean upIsPossible = (checkBounds(mover.down()) && getTile(mover.down()) != 0);
+		boolean upIsPossible = (checkBounds(mover.down()) && getTile(mover.down()) == 0);
 		for(int i = 0; i < delta; i++){
 			if(checkBounds(mover) && shipAround(pos)){
 				upIsPossible = false;
@@ -258,7 +258,7 @@ public class Spielfeld {
 		
 		//Down
 		mover = pos;
-		boolean downIsPossible = (checkBounds(mover.up()) && getTile(mover.up()) != 0);
+		boolean downIsPossible = (checkBounds(mover.up()) && getTile(mover.up()) == 0);
 		for(int i = 0; i <= delta; i++){
 			if(checkBounds(mover) && shipAround(mover)){
 				downIsPossible = false;
@@ -292,7 +292,7 @@ public class Spielfeld {
 		
 		//Left
 		mover = pos.right();
-		boolean leftIsPossible = true;
+		boolean leftIsPossible = (checkBounds(mover) && shipAround(mover));
 		for(int i = 0; i < delta && leftIsPossible; i++){
 			if(checkBounds(mover) && shipAround(mover)){
 				rightIsPossible = false;
@@ -304,7 +304,7 @@ public class Spielfeld {
 		
 		//Up 
 		mover = pos.down();
-		boolean upIsPossible = true;
+		boolean upIsPossible = (checkBounds(mover) && shipAround(mover));
 		for(int i = 0; i < delta && upIsPossible; i++){
 			if(checkBounds(mover) && shipAround(mover)){
 				rightIsPossible = false;
@@ -316,7 +316,7 @@ public class Spielfeld {
 		
 		//Down
 		mover = pos.up();
-		boolean downIsPossible = true;
+		boolean downIsPossible = (checkBounds(mover) && shipAround(mover));
 		for(int i = 0; i < delta && downIsPossible; i++){
 			if(checkBounds(mover) && shipAround(mover)){
 				rightIsPossible = false;
