@@ -4,12 +4,14 @@ public class AI {
 	
 	private Spielfeld field;
 	private MemoryField history;
+	private Position walker;
 	private Position lastShot;
 	
 	public AI(){
 		super();
 		this.field = new Spielfeld();//default is 0, 0
 		this.history = new MemoryField();
+		this.walker = new Position();
 		this.lastShot = new Position();
 	}
 	
@@ -17,12 +19,14 @@ public class AI {
 		super();
 		this.field = new Spielfeld(shipType, positioning);
 		this.history = new MemoryField();
+		this.walker = new Position();
 		this.lastShot = new Position();
 	}
 	
 	public AI(Spielfeld aiField){
 		this.field = aiField;
 		this.history = new MemoryField();
+		this.walker = new Position();
 		this.lastShot = new Position();
 	}
 	
@@ -108,14 +112,42 @@ public class AI {
 			candidate = new Position().random();
 			if(this.field.checkBounds(candidate)){//in bounds
 				if(!this.history.wasHit(candidate)){//not a repeat
-					setLastShot(candidate);
+					beforeShot(candidate);
 					return candidate;
 				}
 			}
 			counter++;
 		}
+		candidate = this.walker;//if cant find new position to shoot in 5 turns, use the walker
+		beforeShot(candidate);
+		return candidate;
+	}
+	
+	private void beforeShot(Position candidate) {//updates walker and lastShot
 		setLastShot(candidate);
-		return candidate; //TODO alternative when cant find unrepeated shots after limit tries
+		if(this.walker.equals(candidate)) {
+			walk();//move walker to next unshot position
+		}
+	}
+	
+	private boolean walk() {//move walker to next unshot position
+		boolean stop = false;
+		
+		while(!stop) {
+			this.walker = this.walker.right();
+			if(this.field.checkBounds(walker)) {//check if in bounds
+				stop = this.history.wasHit(this.walker);//check if already shot
+			} else {//out of bounds
+				this.walker = this.walker.cycle();//new line
+				if(this.field.checkBounds(walker)) {//check if in bounds
+					stop = this.history.wasHit(this.walker);//check if already shot
+				} else {//out of bounds, we walked whole board
+					return false;					
+				}
+			}
+		}		
+		
+		return true;
 	}
 	
 	public void turnResult(int result){//just updating shot Tiles, no prediction
