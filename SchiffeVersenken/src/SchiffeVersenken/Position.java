@@ -37,6 +37,13 @@ public class Position {//doesn't check bounds
 		return this.y;
 	}
 	
+	public boolean equals(Object arg0) {
+		if(arg0 != null && getClass() == arg0.getClass()) {
+			return ((this.getX() == ((Position)arg0).getX())&& (this.getY() == ((Position)arg0).getY()));
+		}
+		return false;
+	}
+	
 	public Position random(){
 		int rx = (int) Math.round((Math.random() * 9));
 		int ry = (int) Math.round((Math.random() * 9));
