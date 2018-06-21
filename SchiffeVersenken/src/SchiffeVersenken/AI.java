@@ -1,18 +1,31 @@
 package SchiffeVersenken;
 
 public class AI {
+	/**
+	 * Random shots for Beruhren
+	 * Probing shots for Wasser and Ecken
+	 * 		BUT ship-kill must be 2 (int) and be properly returned or you will keep shooting shot positions as a failsafe
+	 * 
+	 * expected sequence for shots
+	 * 
+	 * AI cpu = new AI(shipType, positioning);
+	 * Position shoot = cpu.takeTurn();
+	 * int result = player.beShot(shoot);//0 for water, 1 for ship, 2 for ship-kill
+	 * cpu.turnResult(result);
+	 * 
+	 * if you want to use random shots always, uncomment endProbing() in the beginning of takeShot() 
+	 * 
+	 **/
+	
 	
 	private Spielfeld field;
 	private MemoryField history;
 	private Position walker;
 	private Position lastShot;
+	private Probe probe;
 	
 	public AI(){
-		super();
-		this.field = new Spielfeld();//default is 0, 0
-		this.history = new MemoryField();
-		this.walker = new Position();
-		this.lastShot = new Position();
+		this(0, 0);
 	}
 	
 	public AI(int shipType, int positioning){
@@ -21,6 +34,7 @@ public class AI {
 		this.history = new MemoryField();
 		this.walker = new Position();
 		this.lastShot = new Position();
+		this.probe = null;
 	}
 	
 	public AI(Spielfeld aiField){
@@ -28,6 +42,7 @@ public class AI {
 		this.history = new MemoryField();
 		this.walker = new Position();
 		this.lastShot = new Position();
+		this.probe = null;
 	}
 	
 	private Spielfeld getField(){
@@ -104,7 +119,27 @@ public class AI {
 	}
 	
 	
-	public Position takeTurn(){//random shots trying not to repeat
+	public Position takeTurn(){//logic: random for beruhren and probe otherwise
+		//endProbing();//always random logic TODO, just a marker
+		
+		
+		Position candidate;
+		switch(this.field.getPositioning()) {
+		case 2://beruhren
+			candidate = randomShot();
+			break;
+		default://wasser or ecken
+			if(isProbing()) {
+				candidate = probeShot();
+			}else {
+				candidate = randomShot();
+			}
+		}
+		beforeShot(candidate);
+		return candidate;
+	}
+	
+	private Position randomShot() {
 		Position candidate = new Position();
 		int limit = 5;//5 turns tops to shoot
 		int counter = 0;
@@ -112,14 +147,24 @@ public class AI {
 			candidate = new Position().random();
 			if(this.field.checkBounds(candidate)){//in bounds
 				if(!this.history.wasHit(candidate)){//not a repeat
-					beforeShot(candidate);
+					//System.out.println("Random shot: " + candidate);
 					return candidate;
 				}
 			}
 			counter++;
 		}
 		candidate = this.walker;//if cant find new position to shoot in 5 turns, use the walker
-		beforeShot(candidate);
+		//System.out.println("Random shot: " + candidate);
+		return candidate;
+	}
+	
+	private Position probeShot() {
+		Position candidate = this.probe.probe();
+		while(candidate!=null && !this.field.checkBounds(candidate)) {//out of bounds
+			this.probe.checkResult(0, candidate);//say it hit water to stop probe in that direction
+			candidate = this.probe.probe();//try again
+		}
+		//System.out.println("Probe shot: " + candidate);
 		return candidate;
 	}
 	
@@ -150,8 +195,37 @@ public class AI {
 		return true;
 	}
 	
+	private boolean isProbing() {//true if AI is probing ship
+		return (this.probe!=null);
+	}
+	
+	private void endProbing() {
+		this.probe = null;
+	}
+	
 	public void turnResult(int result){//just updating shot Tiles, no prediction
 		this.history.hit(this.lastShot);
+		switch(result) {
+		case 0://water
+			if(isProbing()) {
+				this.probe.checkResult(result, this.lastShot);
+				//prediction changes
+			}
+			break;
+		case 1://ship
+			if(isProbing()) {
+				this.probe.checkResult(result, this.lastShot);
+				//prediction changes
+				
+			} else {//start probe
+				this.probe = new Probe(this.lastShot);
+			}
+			break;
+		case 2://ship-kill
+			//prediction changes
+			endProbing();
+		default://weird stuff
+		}
 	}
 	
 	public Position generateKoordinates(int minimumRange, int maximumRange){
@@ -161,17 +235,25 @@ public class AI {
 	}
 
 	public static void main(String[] args) {
-		AI test = new AI(new Spielfeld(0, 2));
-		test.setShips();
-		System.out.println("Your Field");
-		test.getField().printField();
-		System.out.println("");
-		System.out.println("Your History");
-		System.out.println(test.getHistory());
-		System.out.println("");
+		AI test = new AI();
+//		AI test = new AI(new Spielfeld(0, 2));
+//		test.setShips();
+//		System.out.println("Your Field");
+//		test.getField().printField();
+//		System.out.println("");
 		for(int i = 0; i < 30; i++) {
 			test.takeTurn();
-			test.turnResult(0);
+			
+			switch(i) {
+			case 1:
+				test.turnResult(0);//water
+				break;
+			case 5:
+				test.turnResult(2);//ship_kill
+				break;
+			default:
+				test.turnResult(1);//ship	
+			}			
 		}		
 		System.out.println("Your History after 30 shots");
 		System.out.print("" + test.getHistory().totalHits() + " hits\n");
