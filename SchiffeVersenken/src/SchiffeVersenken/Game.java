@@ -6,9 +6,11 @@ public class Game {
 	private GUI gui = null;
 	private int hits = 30;
 	private boolean turn = determineBeginner();
+	private AI enemy;
 
 	public Game(GUI gui) {
 		this.gui = gui;
+		enemy = new AI(new Spielfeld());
 
 	}
 
@@ -49,7 +51,15 @@ public class Game {
 
 	public void waitForEnemy() {
 		boolean enemyHasShot = false;
-		//TODO
+		enemy.takeTurn();
+		int pos = enemy.getLastShot().getX() + enemy.getLastShot().getY()*10;
+		if(gui.getLeftGridFieldArray()[pos].getBackground() == Color.GREEN) {
+			gui.getLeftGridFieldArray()[pos].setBackground(Color.RED);
+		}
+		else {
+			gui.getLeftGridFieldArray()[pos].setBackground(Color.BLACK);
+			enemyHasShot = true;
+		}
 		if(enemyHasShot) {
 			turn = true;
 		}
