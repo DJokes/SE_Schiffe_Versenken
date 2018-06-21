@@ -352,7 +352,7 @@ public class GUI {
 
 	private void startGame() {
 		
-		GameController game = new GameController(new Game(), getLeftGridFieldArray(), getRightGridFieldArray());
+		GameController game = new GameController(new Game(this), getLeftGridFieldArray(), getRightGridFieldArray());
 //		Game game = new Game();
 //		int nextPlayer = game.determineBeginner();
 //		while (!game.isOver()) {
