@@ -352,12 +352,11 @@ public class GUI {
 	private void startGame() {
 		Game game = new Game();
 		int nextPlayer = game.determineBeginner();
-		while(!game.isOver()) {
-			if(nextPlayer == 1) {
+		while (!game.isOver()) {
+			if (nextPlayer == 1) {
 				game.shoot();
 				nextPlayer = 2;
-			}
-			else {
+			} else {
 				game.waitForEnemy();
 				nextPlayer = 1;
 			}
