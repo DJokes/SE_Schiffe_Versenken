@@ -37,6 +37,18 @@ public class Position {//doesn't check bounds
 		return this.y;
 	}
 	
+	public Position random(){
+		int rx = (int) Math.round((Math.random() * 9));
+		int ry = (int) Math.round((Math.random() * 9));
+		return new Position(rx, ry);
+	}
+	
+	public Position random(int x, int y){
+		int rx = (int) Math.round((Math.random() * x));
+		int ry = (int) Math.round((Math.random() * y));
+		return new Position(rx, ry);
+	}
+	
 	public Position move(int deltaHorizontal, int deltaVertical){
 		return new Position(this.x + deltaHorizontal, this.y + deltaVertical);
 	}

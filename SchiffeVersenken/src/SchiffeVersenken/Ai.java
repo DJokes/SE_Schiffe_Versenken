@@ -2,30 +2,29 @@ package SchiffeVersenken;
 
 public class Ai {
 	
-	private Spielfeld aiField;
-	private Spielfeld enemyField;
-	private Position position = new Position(0, 0);
+	private Spielfeld field;
+	private MemoryField history;
+	private Position lastShot;
 	
-	public Ai(Spielfeld aiField, Spielfeld enemyField){
-		this.aiField = aiField;
-		this.enemyField = enemyField;
-		generateKoordinates(0, 9);
+	public Ai(Spielfeld aiField){
+		this.field = aiField;
+		this.history = new MemoryField();
+		this.lastShot = new Position();
 	}
 	
 	public void setShips() {
 		//Shipset Regular 
-		if (aiField.getShipType() == 0) {
+		if (this.field.getShipType() == 0) {
 			int ship = 5;
 			while(ship >= 0){
-				getStartPoint(ship);
-				//1 = right
+				Position startPoint = getStartPoint(ship);
+				//1 = right //deprecated, ignore it
 				//-1 = left 
 				//-2 = up
 				//2 = down
 				//0 error
-				int direction = aiField.possibleDirection(new Position(position.getVertical(), position.getHorizontal()), ship);
-				aiField.setShip(ship, new Position(position.getVertical(), position.getHorizontal()), direction);
-				generateKoordinates(1, 8);
+				int direction = this.field.possibleDirection(startPoint, ship);
+				this.field.setShip(ship, startPoint, direction);
 				ship--;
 			}
 		}
@@ -36,36 +35,53 @@ public class Ai {
 		}
 	}
 	
-	private void getStartPoint(int ship){
-		while(!aiField.possibleSet(new Position(position.getVertical(), position.getHorizontal()), ship)){
-			generateKoordinates(1, 8);
+	private Position getStartPoint(int ship){
+		Position candidate = new Position().random();
+		while(!this.field.possibleSet(candidate, ship)){
+			candidate = generateKoordinates(1, 8);
 		}
+		return candidate;
 	}
 	
-	public void shoot(){
-		while(enemyField.shootOfAi(position.getVertical(), position.getHorizontal())){
-			generateKoordinates(1, 8);
-		}
+	
+	public Position takeTurn(){//random shots trying not to repeat
+		Position candidate = new Position();
+		int limit = 5;//5 turns tops to shoot
+		int counter = 0;
+		while(counter < limit) {
+			candidate = new Position().random();
+			if(this.field.checkBounds(candidate)){//in bounds
+				if(!this.history.wasHit(candidate)){//not a repeat
+					return candidate;
+				}
+			}
+			counter++;
+		}		
+		return candidate; //TODO alternative when cant find unrepeated shots after limit tries
 	}
 	
-	public void generateKoordinates(int minimumRange, int maximumRange){
+	public void turnResult(int result){//just updating shot Tiles, no prediction
+		this.history.hit(this.lastShot);
+	}
+	
+	public Position generateKoordinates(int minimumRange, int maximumRange){
 		int x = (int) (Math.random() * maximumRange) + minimumRange;
 		int y = (int) (Math.random() * maximumRange) + minimumRange;
-		position = new Position(x, y);
+		return new Position(x, y);
 	}
 
-	public static void main(String[] args) {
-		Spielfeld aiField = new Spielfeld(0, 2);
-		Spielfeld enemyField = new Spielfeld(0, 2);
-		enemyField.setShip(5, new Position(4,4), 0);
-		Ai test = new Ai(aiField, enemyField);
+	public void main(String[] args) {
+		Ai test = new Ai(new Spielfeld(0, 2));
 		test.setShips();
 		System.out.println("Your Field");
-		aiField.printField();
+		field.printField();
 		System.out.println("");
-		test.shoot();
-		System.out.println("Enemy Field");
-		enemyField.printField();;
+		System.out.println("Your History");
+		System.out.println(history);
+		System.out.println("");
+		test.takeTurn();
+		System.out.println("Your History after shot");
+		System.out.println(history);
 		System.out.println("");
 
 	}

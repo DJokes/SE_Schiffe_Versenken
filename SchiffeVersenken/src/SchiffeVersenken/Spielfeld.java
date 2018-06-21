@@ -210,11 +210,11 @@ public class Spielfeld {
 		}
 	}
 	
-	public static void main(String[] args) {
-		Spielfeld test = new Spielfeld(0, 2);		
-		test.setShip(5, new Position(1, 0), 1);
-		test.printField();
-
-	}
+//	public static void main(String[] args) {
+//		Spielfeld test = new Spielfeld(0, 2);		
+//		test.setShip(5, new Position(1, 0), 1);
+//		test.printField();
+//
+//	}
 
 }
