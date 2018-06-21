@@ -12,26 +12,56 @@ public class Ai {
 		this.lastShot = new Position();
 	}
 	
+	private Spielfeld getField(){
+		return field;
+	}
+	
+	private MemoryField getHistory(){
+		return history;
+	}
+	
 	public void setShips() {
-		//Shipset Regular 
-		if (this.field.getShipType() == 0) {
-			int ship = 5;
-			while(ship >= 0){
-				Position startPoint = getStartPoint(ship);
-				//1 = right //deprecated, ignore it
-				//-1 = left 
-				//-2 = up
-				//2 = down
-				//0 error
-				int direction = this.field.possibleDirection(startPoint, ship);
-				this.field.setShip(ship, startPoint, direction);
-				ship--;
+		// int[] ships = aiField.getShips();
+		int[] ships = new int[6];
+		for (int i = 2; i < ships.length; i++) {
+			ships[i] = 1;
+		}
+		int direction = 1;
+		Position position = new Position(0,0);
+		position.random(1, 8);
+		for (int ship = ships.length - 1; ship >= 2; ship--) {
+			for (int j = 0; j < ships[ship]; j++) {
+				position = getStartPoint(ship);
+				boolean shipIsNotSet = true;
+				while (shipIsNotSet) {
+					// Try setting the ship to the position
+					if (field.setShip(ship, new Position(position.getVertical(), position.getHorizontal()),direction)) {
+						shipIsNotSet = false;
+					}
+					// Invert direction
+					else if (direction > 0) {
+						direction = direction * -1;
+					}
+					// Change direction
+					else {
+						direction = changeDirection(direction);
+					}
+				}
+				direction = changeDirection(direction);
+				position.random(1, 8);
 			}
 		}
-		// Shipset special
+	}
+	
+	private static int changeDirection(int direction){
+		if(direction == 1 || direction == -1){
+			return 2;
+		}
+		else if(direction == 2 || direction == -2){
+			return 1;
+		}
 		else{
-			
-			
+			return 0;
 		}
 	}
 	
@@ -70,19 +100,19 @@ public class Ai {
 		return new Position(x, y);
 	}
 
-	public void main(String[] args) {
+	public static void main(String[] args) {
 		Ai test = new Ai(new Spielfeld(0, 2));
 		test.setShips();
 		System.out.println("Your Field");
-		field.printField();
+		test.getField().printField();
 		System.out.println("");
-		System.out.println("Your History");
-		System.out.println(history);
-		System.out.println("");
-		test.takeTurn();
-		System.out.println("Your History after shot");
-		System.out.println(history);
-		System.out.println("");
+//		System.out.println("Your History");
+//		System.out.println(test.getHistory());
+//		System.out.println("");
+//		test.takeTurn();
+//		System.out.println("Your History after shot");
+//		System.out.println(test.getHistory());
+//		System.out.println("");
 
 	}
 

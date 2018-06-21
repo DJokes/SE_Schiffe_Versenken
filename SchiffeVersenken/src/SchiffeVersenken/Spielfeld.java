@@ -78,6 +78,10 @@ public class Spielfeld {
 	}
 	
 	public boolean setShip(int ship, Position startPosition, int direction){//TODO unset partial ships
+		if(isNotEnoughSpace(ship, startPosition, direction)){
+			return false;
+		}
+		else{
 		boolean set;
 		Position current = startPosition;
 		for(int i = 0; i < ship; i++){
@@ -107,6 +111,36 @@ public class Spielfeld {
 			}    
 		}
 		return true;
+		}
+	}
+	
+	private boolean isNotEnoughSpace(int ship, Position pos, int direction){
+		Position inside = pos;
+		for(int i = 0; i < ship; i++){
+			if(!checkBounds(inside)){
+				return true;
+			}
+			else if(getTile(inside) != 0){
+				return true;
+			}
+			if(direction == 1){
+				inside = inside.right();
+			}
+			else if(direction == -1){
+				inside = inside.left();
+			}
+			else if(direction == 2){
+				inside = inside.down();
+			}
+			else if(direction == -2){
+				inside = inside.up();
+			}
+			else{
+				return true;	
+			}
+		}
+		return false;
+		
 	}
 	
 	public boolean possibleSet(Position pos, int delta){
@@ -123,8 +157,63 @@ public class Spielfeld {
 	}
 	
 	private boolean touchingPositioning(Position pos, int delta){
+		Position mover = pos;
+		//Right 
+		boolean rightIsPossible = true;
+		for(int i = 0; i < delta; i++){
+			if(checkBounds(pos) && getTile(pos) != 0){
+				rightIsPossible = false;
+				break;
+			}
+			else{
+				mover = mover.right();
+			}
+		}
 		
-		return false;
+		//Left 
+		mover = pos;
+		boolean leftIsPossible = true;
+		for(int i = 0; i < delta; i++){
+			if(checkBounds(pos) && getTile(pos) != 0){
+				leftIsPossible = false;
+				break;
+			}
+			else{
+				mover = mover.left();
+			}
+		}
+		
+		//Up 
+		mover = pos;
+		boolean upIsPossible = true;
+		for(int i = 0; i < delta; i++){
+			if(checkBounds(pos) && getTile(pos) != 0){
+				upIsPossible = false;
+				break;
+			}
+			else{
+				mover = mover.up();
+			}
+		}
+		
+		//Down
+		mover = pos;
+		boolean downIsPossible = true;
+		for(int i = 0; i <= delta; i++){
+			if(checkBounds(pos) && getTile(pos) != 0){
+				downIsPossible = false;
+				break;
+			}
+			else{
+				mover = mover.down();
+			}
+		}
+		if(rightIsPossible || leftIsPossible || upIsPossible || downIsPossible){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 	private boolean cornersTouchingPositioning(Position pos, int delta){
@@ -133,39 +222,6 @@ public class Spielfeld {
 	
 	private boolean noTouchingPositioning(Position pos, int delta){
 		return false;
-	}
-	
-	public int possibleDirection(Position pos, int delta){
-		if(positioning == 2){
-			return touchingDirection(pos, delta);
-		}
-		else if(positioning == 1){
-			return cornersTouchingDirection(pos, delta);
-		}
-		else if(positioning == 0){
-			return noTouchingDirection(pos, delta);
-		}
-			
-		return -1;
-	}
-	
-	private int touchingDirection(Position pos, int delta){
-		//0 as error
-		//1 as to the right 
-		//-1 as to the left
-		//2 as down 
-		//-2 as up
-		
-		
-		return 1;
-	}
-	
-	private int cornersTouchingDirection(Position pos, int delta){
-		return 1;
-	}
-	
-	private int noTouchingDirection(Position pos, int delta){
-		return 1;
 	}
 	
 	public boolean shootOfAi(int x, int y){
