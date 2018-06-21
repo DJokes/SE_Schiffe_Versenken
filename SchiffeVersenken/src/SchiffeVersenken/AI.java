@@ -56,6 +56,9 @@ public class AI {
 	private void setLastShot(Position shot) {
 		this.lastShot = shot;
 	}
+	public Position getLastShot(){
+		return lastShot;
+	}
 	
 	public void setShips() {
 		// int[] ships = aiField.getShips();
@@ -68,7 +71,7 @@ public class AI {
 		position = position.add(1);//1 to 8 on x and y
 		for (int ship = ships.length - 1; ship >= 2; ship--) {
 			for (int j = 0; j < ships[ship]; j++) {
-				position = getStartPoint(ship);
+				position = getStartPoint(ship, position);
 				boolean shipIsNotSet = true;
 				int tries = 0;
 				while (shipIsNotSet) {
@@ -85,7 +88,7 @@ public class AI {
 						direction = changeDirection(direction);
 					}
 					if(tries == 4){
-						position = getStartPoint(ship);
+						position = getStartPoint(ship, position);
 						tries = 0;
 					}
 					tries++;
@@ -109,8 +112,8 @@ public class AI {
 		}
 	}
 	
-	private Position getStartPoint(int ship){
-		Position candidate = new Position().random();
+	private Position getStartPoint(int ship, Position firstTry){
+		Position candidate = firstTry;
 		while(!this.field.possibleSet(candidate, ship)){
 			candidate = new Position().random(7);//0 to 7 on x and y
 			candidate = candidate.add(1);//1 to 8 on x and y
