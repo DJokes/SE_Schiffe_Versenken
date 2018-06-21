@@ -33,6 +33,7 @@ public class Ai {
 			for (int j = 0; j < ships[ship]; j++) {
 				position = getStartPoint(ship);
 				boolean shipIsNotSet = true;
+				int tries = 0;
 				while (shipIsNotSet) {
 					// Try setting the ship to the position
 					if (field.setShip(ship, new Position(position.getVertical(), position.getHorizontal()),direction)) {
@@ -46,6 +47,11 @@ public class Ai {
 					else {
 						direction = changeDirection(direction);
 					}
+					if(tries == 4){
+						position = getStartPoint(ship);
+						tries = 0;
+					}
+					tries++;
 				}
 				direction = changeDirection(direction);
 				position.random(1, 8);
