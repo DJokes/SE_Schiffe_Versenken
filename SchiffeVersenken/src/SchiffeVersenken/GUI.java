@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -214,6 +215,7 @@ public class GUI {
 		// changeGrid(1, 2, 89);
 		//
 		setOpponentScore(0);
+		setPlayerScore(0);
 
 		gameFrame.setSize(GAME_WIDTH, GAME_HEIGHT);
 		gameFrame.setResizable(false);
@@ -350,17 +352,20 @@ public class GUI {
 	}
 
 	private void startGame() {
-		Game game = new Game();
-		int nextPlayer = game.determineBeginner();
-		while (!game.isOver()) {
-			if (nextPlayer == 1) {
-				game.shoot();
-				nextPlayer = 2;
-			} else {
-				game.waitForEnemy();
-				nextPlayer = 1;
-			}
-		}
+		
+		JOptionPane.showMessageDialog(null, "Spiel beginnt!");
+		GameController game = new GameController(new Game(this), getLeftGridFieldArray(), getRightGridFieldArray());
+//		Game game = new Game();
+//		int nextPlayer = game.determineBeginner();
+//		while (!game.isOver()) {
+//			if (nextPlayer == 1) {
+//				game.shoot();
+//				nextPlayer = 2;
+//			} else {
+//				game.waitForEnemy();
+//				nextPlayer = 1;
+//			}
+//		}
 	}
 
 	public boolean isInField(int x, int y) {
