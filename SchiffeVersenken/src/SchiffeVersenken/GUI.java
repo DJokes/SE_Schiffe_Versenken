@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -352,6 +353,7 @@ public class GUI {
 
 	private void startGame() {
 		
+		JOptionPane.showMessageDialog(null, "Spiel beginnt!");
 		GameController game = new GameController(new Game(this), getLeftGridFieldArray(), getRightGridFieldArray());
 //		Game game = new Game();
 //		int nextPlayer = game.determineBeginner();

@@ -4,6 +4,7 @@ import java.awt.Color;
 
 public class Game {
 	private GUI gui = null;
+	private int hits = 30;
 
 	public Game(GUI gui) {
 		this.gui = gui;
@@ -15,17 +16,22 @@ public class Game {
 	}
 
 	public void shoot(int index) {
-		if (gui.getRightGridFieldArray()[index].getBackground() == Color.blue) {
-			gui.getRightGridFieldArray()[index].setBackground(Color.BLACK);
-		}
-		else if(gui.getRightGridFieldArray()[index].getBackground() == Color.GREEN) {
-			gui.getRightGridFieldArray()[index].setBackground(Color.RED);
+		if (!isOver()) {
+			if (gui.getRightGridFieldArray()[index].getBackground() == Color.blue) {
+				gui.getRightGridFieldArray()[index].setBackground(Color.BLACK);
+			} else if (gui.getRightGridFieldArray()[index].getBackground() == Color.GREEN) {
+				gui.getRightGridFieldArray()[index].setBackground(Color.RED);
+				hits--;
+			}
 		}
 	}
 
 	public boolean isOver() {
-		// TODO
-		return true;
+		if (hits == 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public void waitForEnemy() {
