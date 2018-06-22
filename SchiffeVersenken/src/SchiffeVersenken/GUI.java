@@ -306,6 +306,10 @@ public class GUI {
 
 			if (chosenSettings == 1) {
 				for (int i = 0; i < ship_size; i++) {
+//					if(checkAroundField()){
+//						isValid = false;
+//						break;
+//					}
 					if (!isFieldValidate(firstX + (diffX != 0 ? (int) Math.copySign(i, diffX) : 0),
 							firstY + (diffY != 0 ? (int) Math.copySign(i, diffY) : 0))) {
 						isValid = false;
@@ -374,10 +378,10 @@ public class GUI {
 	}
 	
 	public boolean checkAroundField(int x, int y){
-		for(int i =y-1; i <= (y+1);i++){
-			for(int j = x-1;j <= (x+1) ;j++){
+		for(int i =y-1; i <= (y+1);i = i +2 ){
+			for(int j = x-1;j <= (x+1) ;j = j+ 2){
 				try{
-					if(fieldArray[j][i] == true && !(i == this.y && j == this.x) && !(i == y && j == x)){
+					if(fieldArray[j][i] == true){
 						return false;
 					}
 					
