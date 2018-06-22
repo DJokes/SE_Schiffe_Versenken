@@ -74,11 +74,6 @@ public class AI {
 	}
 	
 	public void setShips() {
-		// int[] ships = aiField.getShips();
-		int[] ships = new int[6];
-		for (int i = 2; i < ships.length; i++) {
-			ships[i] = 2;
-		}
 		int direction = 1;
 		Position position = new Position().random(7);//0 to 7 on x and y
 		position = position.add(1);//1 to 8 on x and y
