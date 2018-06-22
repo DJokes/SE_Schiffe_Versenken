@@ -549,6 +549,7 @@ public class GUI {
 		enemyScore = 0;
 		setPlayerScore(0);
 		setOpponentScore(0);
+		setzen = false;
 	}
 
 	public JButton getOpt1() {
