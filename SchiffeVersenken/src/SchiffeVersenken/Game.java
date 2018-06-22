@@ -7,10 +7,13 @@ public class Game {
 	private int hits = 30;
 	private boolean turn = determineBeginner();
 	private AI enemy;
+	private boolean[][] field;
 
 	public Game(GUI gui) {
 		this.gui = gui;
 		enemy = new AI(new Spielfeld());
+		// enemy.setShips();
+		field = enemy.getField().getField();
 
 	}
 
@@ -24,18 +27,19 @@ public class Game {
 	}
 
 	public void shoot(int index) {
+		int x = index % 10;
+		int y = index / 10;
 
 		if (!isOver()) {
 			if (turn) {
-				if (gui.getRightGridFieldArray()[index].getBackground() == Color.blue) {
+				if (field[x][y] == false) {
 					gui.getRightGridFieldArray()[index].setBackground(Color.BLACK);
 					turn = false;
-				} else if (gui.getRightGridFieldArray()[index].getBackground() == Color.GREEN) {
+				} else {
 					gui.getRightGridFieldArray()[index].setBackground(Color.RED);
 					hits--;
 				}
-			}
-			else {
+			} else {
 				waitForEnemy();
 			}
 		}
@@ -52,15 +56,14 @@ public class Game {
 	public void waitForEnemy() {
 		boolean enemyHasShot = false;
 		enemy.takeTurn();
-		int pos = enemy.getLastShot().getX() + enemy.getLastShot().getY()*10;
-		if(gui.getLeftGridFieldArray()[pos].getBackground() == Color.GREEN) {
+		int pos = enemy.getLastShot().getX() + enemy.getLastShot().getY() * 10;
+		if (gui.getLeftGridFieldArray()[pos].getBackground() == Color.GREEN) {
 			gui.getLeftGridFieldArray()[pos].setBackground(Color.RED);
-		}
-		else {
+		} else {
 			gui.getLeftGridFieldArray()[pos].setBackground(Color.BLACK);
 			enemyHasShot = true;
 		}
-		if(enemyHasShot) {
+		if (enemyHasShot) {
 			turn = true;
 		}
 
