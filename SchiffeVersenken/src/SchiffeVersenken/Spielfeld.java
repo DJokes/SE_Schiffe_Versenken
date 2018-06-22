@@ -406,7 +406,7 @@ public class Spielfeld {
 		for(int i = 0; i < field.length; i++){
 			for(int j = 0; j < field.length; j++){
 				String mark = "W";
-				if(field[i][j]){
+				if(field[j][i]){
 					mark = "S";
 				}
 				System.out.print("[" + mark + "]");
