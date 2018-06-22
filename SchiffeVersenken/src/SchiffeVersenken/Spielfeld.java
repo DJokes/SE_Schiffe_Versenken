@@ -25,6 +25,10 @@ public class Spielfeld {
 		this.positioning = positioning;
 	}
 	
+	public boolean[][] getField(){
+		return field;
+	}
+	
 	public int getShipType(){
 		return this.shipType;
 	}

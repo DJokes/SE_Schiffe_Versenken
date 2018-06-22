@@ -23,6 +23,7 @@ public class AI {
 	private Position walker;
 	private Position lastShot;
 	private Probe probe;
+	private int[] ships;
 	
 	public AI(){
 		this(0, 0);
@@ -56,6 +57,7 @@ public class AI {
 	private void setLastShot(Position shot) {
 		this.lastShot = shot;
 	}
+	
 	public Position getLastShot(){
 		return lastShot;
 	}
