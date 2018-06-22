@@ -67,6 +67,7 @@ public class Game {
 	public void waitForEnemy() {
 		boolean enemyHasShot = false;
 		enemy.takeTurn();
+		enemy.turnResult(0);
 		int pos = enemy.getLastShot().getX() + enemy.getLastShot().getY() * 10;
 		if (gui.getLeftGridFieldArray()[pos].getBackground() == Color.GREEN) {
 			gui.getLeftGridFieldArray()[pos].setBackground(Color.RED);
