@@ -36,7 +36,6 @@ public class GameController extends MouseAdapter implements ActionListener, Mous
 	public void mousePressed(MouseEvent e) {
 		for (int i = 0; i < rightGridFieldArray.length; i++) {
 			if (e.getSource() == rightGridFieldArray[i]) {
-				System.out.println("Rechtes Spielfeld, Index: " + i);
 				game.shoot(i);
 				break;
 			}
