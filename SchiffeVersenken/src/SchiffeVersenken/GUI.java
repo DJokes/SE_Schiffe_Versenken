@@ -48,6 +48,8 @@ public class GUI {
 	private int shipNormal[] = { 0, 0, 4, 3, 2, 1 };
 	private int shipSpezial[] = new int[10];
 	private int chosenSettings = 0;
+	private int playerScore = 0;
+	private int enemyScore = 0;
 
 	// Danke, Maze :D
 	public GUI(Spiel game) {
@@ -493,11 +495,13 @@ public class GUI {
 	}
 
 	public void setPlayerScore(int score) {
-		leftGridScore.setText("Dein Score: " + score);
+		playerScore += score;
+		leftGridScore.setText("Dein Score: " + playerScore);
 	}
 
 	public void setOpponentScore(int score) {
-		rightGridScore.setText("Gegner Score: " + score);
+		enemyScore += score;
+		rightGridScore.setText("Gegner Score: " + enemyScore);
 	}
 
 	public void setShipNumber(int number) {
@@ -538,6 +542,11 @@ public class GUI {
 
 		x = 0;
 		y = 0;
+		
+		playerScore = 0;
+		enemyScore = 0;
+		setPlayerScore(0);
+		setOpponentScore(0);
 	}
 
 	public JButton getOpt1() {
@@ -571,6 +580,22 @@ public class GUI {
 
 	public JButton[] getRightGridFieldArray() {
 		return rightGridFieldArray;
+	}
+	
+	public int[] getShipNormal() {
+		return shipNormal;
+	}
+	
+	public int[] getShipSpezial() {
+		return shipSpezial;
+	}
+	
+	public int getPlayerScore() {
+		return playerScore;
+	}
+	
+	public int getEnemyScore() {
+		return enemyScore;
 	}
 
 	// public JButton getShip_placement_ok() {

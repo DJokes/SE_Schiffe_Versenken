@@ -38,6 +38,8 @@ public class Game {
 				} else {
 					gui.getRightGridFieldArray()[index].setBackground(Color.RED);
 					hits--;
+					gui.setPlayerScore(5);
+					gui.setOpponentScore(-2);
 				}
 			} else {
 				waitForEnemy();
@@ -59,6 +61,8 @@ public class Game {
 		int pos = enemy.getLastShot().getX() + enemy.getLastShot().getY() * 10;
 		if (gui.getLeftGridFieldArray()[pos].getBackground() == Color.GREEN) {
 			gui.getLeftGridFieldArray()[pos].setBackground(Color.RED);
+			gui.setOpponentScore(5);
+			gui.setPlayerScore(-2);
 		} else {
 			gui.getLeftGridFieldArray()[pos].setBackground(Color.BLACK);
 			enemyHasShot = true;
