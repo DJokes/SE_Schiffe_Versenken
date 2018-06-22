@@ -27,6 +27,7 @@ public class AI {
 	
 	public AI(){
 		this(0, 0);
+		ships = new int[]{0, 0, 4, 3, 2, 1};
 	}
 	
 	public AI(int shipType, int positioning){
@@ -44,6 +45,16 @@ public class AI {
 		this.walker = new Position();
 		this.lastShot = new Position();
 		this.probe = null;
+		this.ships = new int[]{0, 0, 4, 3, 2, 1};
+	}
+	
+	public AI(int shipType, int positioning, int[]ships){
+		this.field = new Spielfeld(shipType, positioning);
+		this.history = new MemoryField();
+		this.walker = new Position();
+		this.lastShot = new Position();
+		this.probe = null;
+		this.ships = ships;
 	}
 	
 	public Spielfeld getField(){
