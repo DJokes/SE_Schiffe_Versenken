@@ -282,32 +282,23 @@ public class Spielfeld {
 	
 	private boolean noTouchingPositioning(Position pos, int delta){
 		//Right 
-		//Set mover to one position before to check that there is no ship near
 		Position mover = pos.left();
-		//not at a border
-		boolean rightIsPossible;
-		if(checkBounds(mover)){
-			
-		}
-		else{
-			rightIsPossible = true;
-		}
-		rightIsPossible = (checkBounds(mover) && getTile(mover)== false && noShipAround(mover, 1));
-		for(int i = 0; i <= delta && rightIsPossible; i++){
-			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, 1)){
+		boolean rightIsPossible = true;
+		for(int i = 0; i <= delta; i++){
+			if(checkBounds(mover) && getTile(mover) && !noShipAround(mover, 1)){
 				rightIsPossible = false;
 			}
 			else{
 				mover = mover.right();
 			}
 		}
-		
-		//Left
+	
+		//Left 
 		mover = pos.right();
-		boolean leftIsPossible = (checkBounds(mover) && getTile(mover) == false && noShipAround(mover, -1));
-		for(int i = 0; i <= delta && leftIsPossible; i++){
-			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, -1)){
-				rightIsPossible = false;
+		boolean leftIsPossible = true;
+		for(int i = 0; i <= delta; i++){
+			if(checkBounds(mover) && getTile(mover) && !noShipAround(mover, 1)){
+				leftIsPossible = false;
 			}
 			else{
 				mover = mover.left();
@@ -316,34 +307,33 @@ public class Spielfeld {
 		
 		//Up 
 		mover = pos.down();
-		boolean upIsPossible = (checkBounds(mover) && getTile(mover) == false && noShipAround(mover, 2));
-		for(int i = 0; i <= delta && upIsPossible; i++){
-			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, -2)){
-				rightIsPossible = false;
+		boolean upIsPossible = true;
+		for(int i = 0; i <= delta; i++){
+			if(checkBounds(mover) && getTile(mover) && !noShipAround(mover, 1)){
+				upIsPossible = false;
 			}
 			else{
 				mover = mover.up();
 			}
 		}
-		
 		//Down
 		mover = pos.up();
-		boolean downIsPossible = (checkBounds(mover) && getTile(mover)== false && noShipAround(mover, -2));
-		for(int i = 0; i <= delta && downIsPossible; i++){
-			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, 2)){
-				rightIsPossible = false;
+		boolean downIsPossible = true;
+		for(int i = 0; i <= delta; i++){
+			if(checkBounds(mover) && getTile(mover) && !noShipAround(mover, 1)){
+				downIsPossible = false;
 			}
 			else{
 				mover = mover.down();
 			}
 		}
-		
 		if(rightIsPossible || leftIsPossible || upIsPossible || downIsPossible){
 			return true;
 		}
 		else{
 			return false;
-		}		
+		}
+		
 	}
 	
 	private boolean noShipAround(Position pos, int direction){
