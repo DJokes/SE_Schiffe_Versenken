@@ -245,12 +245,12 @@ public class AI {
 		return new Position(x, y);
 	}
 
-	public static void main(String[] args) {
+//	public static void main(String[] args) {
 //		AI test = new AI();
-		AI test = new AI(new Spielfeld(0, 2));
-		test.setShips();
-		System.out.println("Your Field");
-		test.getField().printField();
+//		AI test = new AI(new Spielfeld(0, 2));
+//		test.setShips();
+//		System.out.println("Your Field");
+//		test.getField().printField();
 //		System.out.println("");
 //		for(int i = 0; i < 30; i++) {
 //			test.takeTurn();
@@ -267,10 +267,10 @@ public class AI {
 //			}			
 //		}		
 //		System.out.println("Your History after 30 shots");
-//		System.out.print("" + test.getHistory().totalHits() + " hits\n");
+//		System.out.print("" + test.getHistory().totalHits() + " hits\n");		
 //		System.out.println(test.getHistory());
 //		System.out.println("");
-
-	}
+//
+//	}
 
 }

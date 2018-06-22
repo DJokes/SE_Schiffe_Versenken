@@ -454,12 +454,4 @@ public class Spielfeld {
 			System.out.println("");
 		}
 	}
-	
-//	public static void main(String[] args) {
-//		Spielfeld test = new Spielfeld(0, 1);		
-//		test.setShip(5, new Position(1, 0), 1);
-//		test.printField();
-//
-//	}
-
 }
