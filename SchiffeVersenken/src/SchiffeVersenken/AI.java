@@ -45,7 +45,7 @@ public class AI {
 		this.probe = null;
 	}
 	
-	private Spielfeld getField(){
+	public Spielfeld getField(){
 		return this.field;
 	}
 	
@@ -64,7 +64,7 @@ public class AI {
 		// int[] ships = aiField.getShips();
 		int[] ships = new int[6];
 		for (int i = 2; i < ships.length; i++) {
-			ships[i] = 1;
+			ships[i] = 2;
 		}
 		int direction = 1;
 		Position position = new Position().random(7);//0 to 7 on x and y
@@ -238,30 +238,30 @@ public class AI {
 	}
 
 	public static void main(String[] args) {
-		AI test = new AI();
-//		AI test = new AI(new Spielfeld(0, 2));
-//		test.setShips();
-//		System.out.println("Your Field");
-//		test.getField().printField();
+//		AI test = new AI();
+		AI test = new AI(new Spielfeld(0, 0));
+		test.setShips();
+		System.out.println("Your Field");
+		test.getField().printField();
 //		System.out.println("");
-		for(int i = 0; i < 30; i++) {
-			test.takeTurn();
-			
-			switch(i) {
-			case 1:
-				test.turnResult(0);//water
-				break;
-			case 5:
-				test.turnResult(2);//ship_kill
-				break;
-			default:
-				test.turnResult(1);//ship	
-			}			
-		}		
-		System.out.println("Your History after 30 shots");
-		System.out.print("" + test.getHistory().totalHits() + " hits\n");
-		System.out.println(test.getHistory());
-		System.out.println("");
+//		for(int i = 0; i < 30; i++) {
+//			test.takeTurn();
+//			
+//			switch(i) {
+//			case 1:
+//				test.turnResult(0);//water
+//				break;
+//			case 5:
+//				test.turnResult(2);//ship_kill
+//				break;
+//			default:
+//				test.turnResult(1);//ship	
+//			}			
+//		}		
+//		System.out.println("Your History after 30 shots");
+//		System.out.print("" + test.getHistory().totalHits() + " hits\n");
+//		System.out.println(test.getHistory());
+//		System.out.println("");
 
 	}
 

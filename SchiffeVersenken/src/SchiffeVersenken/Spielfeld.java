@@ -3,7 +3,7 @@ package SchiffeVersenken;
 public class Spielfeld {
 	
 	// 0 = water // 1 to 10 are ships their length // 100 is hit
-	private int[][] field = new int[10][10];
+	private boolean[][] field = new boolean[10][10];
 	private int maxX = 10;
 	private int maxY = 10;
 	private int shipType;
@@ -33,18 +33,18 @@ public class Spielfeld {
 		return this.positioning;
 	}
 	
-	public int getTile(Position pos){//please make sure position is in bounds BEFORE calling this method
+	public boolean getTile(Position pos){//please make sure position is in bounds BEFORE calling this method
 		return this.field[pos.getY()][pos.getX()];
 	}
 	
-	public int getTile(int x, int y){//please make sure position is in bounds BEFORE calling this method
+	public boolean getTile(int x, int y){//please make sure position is in bounds BEFORE calling this method
 		return this.field[y][x];
 	}
 	
 	public boolean setTile(Position pos, int value){//will check for bounds
 		boolean bounds = checkBounds(pos);
 		if(bounds){
-			this.field[pos.getY()][pos.getX()] = value; 
+			this.field[pos.getY()][pos.getX()] = true; 
 		}
 		return bounds;
 	}
@@ -52,7 +52,7 @@ public class Spielfeld {
 	public boolean setTile(int x, int y, int value){//will check for bounds
 		boolean bounds = checkBounds(x, y);
 		if(bounds){
-			this.field[y][x] = value; 
+			this.field[y][x] = true; 
 		}
 		return bounds;
 	}
@@ -85,7 +85,7 @@ public class Spielfeld {
 		boolean set;
 		Position current = startPosition;
 		for(int i = 0; i < ship; i++){
-			if(getTile(current) == 0){
+			if(getTile(current) == false){
 				set = setTile(current, ship);// if set is false, you'll know the placement failed
 				if(!set){
 					return false;
@@ -120,7 +120,7 @@ public class Spielfeld {
 			if(!checkBounds(inside)){
 				return true;
 			}
-			else if(getTile(inside) != 0){
+			else if(getTile(inside) != false){
 				return true;
 			}
 			if(direction == 1){
@@ -161,7 +161,7 @@ public class Spielfeld {
 		//Right 
 		boolean rightIsPossible = true;
 		for(int i = 0; i < delta; i++){
-			if(checkBounds(mover) && getTile(mover) != 0){
+			if(checkBounds(mover) && getTile(mover) != false){
 				rightIsPossible = false;
 				break;
 			}
@@ -174,7 +174,7 @@ public class Spielfeld {
 		mover = pos;
 		boolean leftIsPossible = true;
 		for(int i = 0; i < delta; i++){
-			if(checkBounds(mover) && getTile(mover) != 0){
+			if(checkBounds(mover) && getTile(mover) != false){
 				leftIsPossible = false;
 				break;
 			}
@@ -187,7 +187,7 @@ public class Spielfeld {
 		mover = pos;
 		boolean upIsPossible = true;
 		for(int i = 0; i < delta; i++){
-			if(checkBounds(mover) && getTile(mover) != 0){
+			if(checkBounds(mover) && getTile(mover) != false){
 				upIsPossible = false;
 				break;
 			}
@@ -200,7 +200,7 @@ public class Spielfeld {
 		mover = pos;
 		boolean downIsPossible = true;
 		for(int i = 0; i <= delta; i++){
-			if(checkBounds(mover) && getTile(mover) != 0){
+			if(checkBounds(mover) && getTile(mover) != false){
 				downIsPossible = false;
 				break;
 			}
@@ -219,9 +219,9 @@ public class Spielfeld {
 	private boolean cornersTouchingPositioning(Position pos, int delta){
 		//Right 
 		Position mover = pos;
-		boolean rightIsPossible = (checkBounds(mover.left()) && getTile(mover.left()) == 0);
-		for(int i = 0; i < delta; i++){
-			if(checkBounds(mover) && shipAround(mover)){
+		boolean rightIsPossible = (checkBounds(mover.left()) && getTile(mover.left()) == false);
+		for(int i = 0; i <= delta; i++){
+			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, 1)){
 				rightIsPossible = false;
 				break;
 			}
@@ -232,9 +232,9 @@ public class Spielfeld {
 		
 		//Left 
 		mover = pos;
-		boolean leftIsPossible = (checkBounds(mover.right()) && getTile(mover.right()) == 0);
-		for(int i = 0; i < delta; i++){
-			if(checkBounds(mover) && shipAround(mover)){
+		boolean leftIsPossible = (checkBounds(mover.right()) && getTile(mover.right()) == false);
+		for(int i = 0; i <= delta; i++){
+			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, -1)){
 				leftIsPossible = false;
 				break;
 			}
@@ -245,9 +245,9 @@ public class Spielfeld {
 		
 		//Up 
 		mover = pos;
-		boolean upIsPossible = (checkBounds(mover.down()) && getTile(mover.down()) == 0);
-		for(int i = 0; i < delta; i++){
-			if(checkBounds(mover) && shipAround(pos)){
+		boolean upIsPossible = (checkBounds(mover.down()) && getTile(mover.down()) == false);
+		for(int i = 0; i <= delta; i++){
+			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(pos, -2)){
 				upIsPossible = false;
 				break;
 			}
@@ -258,9 +258,9 @@ public class Spielfeld {
 		
 		//Down
 		mover = pos;
-		boolean downIsPossible = (checkBounds(mover.up()) && getTile(mover.up()) == 0);
+		boolean downIsPossible = (checkBounds(mover.up()) && getTile(mover.up()) == false);
 		for(int i = 0; i <= delta; i++){
-			if(checkBounds(mover) && shipAround(mover)){
+			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, 2)){
 				downIsPossible = false;
 				break;
 			}
@@ -280,9 +280,17 @@ public class Spielfeld {
 		//Right 
 		//Set mover to one position before to check that there is no ship near
 		Position mover = pos.left();
-		boolean rightIsPossible = (checkBounds(mover) && shipAround(mover));
-		for(int i = 0; i < delta && rightIsPossible; i++){
-			if(checkBounds(mover) && shipAround(mover)){
+		//not at a border
+		boolean rightIsPossible;
+		if(checkBounds(mover)){
+			
+		}
+		else{
+			rightIsPossible = true;
+		}
+		rightIsPossible = (checkBounds(mover) && getTile(mover)== false && noShipAround(mover, 1));
+		for(int i = 0; i <= delta && rightIsPossible; i++){
+			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, 1)){
 				rightIsPossible = false;
 			}
 			else{
@@ -292,9 +300,9 @@ public class Spielfeld {
 		
 		//Left
 		mover = pos.right();
-		boolean leftIsPossible = (checkBounds(mover) && shipAround(mover));
-		for(int i = 0; i < delta && leftIsPossible; i++){
-			if(checkBounds(mover) && shipAround(mover)){
+		boolean leftIsPossible = (checkBounds(mover) && getTile(mover) == false && noShipAround(mover, -1));
+		for(int i = 0; i <= delta && leftIsPossible; i++){
+			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, -1)){
 				rightIsPossible = false;
 			}
 			else{
@@ -304,9 +312,9 @@ public class Spielfeld {
 		
 		//Up 
 		mover = pos.down();
-		boolean upIsPossible = (checkBounds(mover) && shipAround(mover));
-		for(int i = 0; i < delta && upIsPossible; i++){
-			if(checkBounds(mover) && shipAround(mover)){
+		boolean upIsPossible = (checkBounds(mover) && getTile(mover) == false && noShipAround(mover, 2));
+		for(int i = 0; i <= delta && upIsPossible; i++){
+			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, -2)){
 				rightIsPossible = false;
 			}
 			else{
@@ -316,9 +324,9 @@ public class Spielfeld {
 		
 		//Down
 		mover = pos.up();
-		boolean downIsPossible = (checkBounds(mover) && shipAround(mover));
-		for(int i = 0; i < delta && downIsPossible; i++){
-			if(checkBounds(mover) && shipAround(mover)){
+		boolean downIsPossible = (checkBounds(mover) && getTile(mover)== false && noShipAround(mover, -2));
+		for(int i = 0; i <= delta && downIsPossible; i++){
+			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, 2)){
 				rightIsPossible = false;
 			}
 			else{
@@ -334,18 +342,37 @@ public class Spielfeld {
 		}		
 	}
 	
-	private boolean shipAround(Position pos){
-		Position up = pos.up();
-		Position down = pos.down();
-		boolean upIsFree = (checkBounds(up) && getTile(up) != 0);
-		boolean downIsfree = (checkBounds(down) && getTile(down) != 0);
+	private boolean noShipAround(Position pos, int direction){
+		if(direction == 1 || direction == -1){
+			Position up = pos.up();
+			Position down = pos.down();
+			boolean upIsFree = (checkBounds(up) && getTile(up) == false);
+			boolean downIsfree = (checkBounds(down) && getTile(down) == false);
+			
+			if(!downIsfree || !upIsFree){
+				return false;
+			}
+			else{
+				return true;
+			}
+		}
+		else if(direction == 2 || direction == -2){
+			Position left = pos.left();
+			Position right = pos.right();
+			boolean leftIsFree = (checkBounds(left) && getTile(left) == false);
+			boolean rightIsFree = (checkBounds(right) && getTile(right) == false);
+			if(!rightIsFree || !leftIsFree){
+				return false;
+			}
+			else{
+				return true;
+			}
+		}
 		
-		if(!downIsfree || !upIsFree){
+		else{
 			return false;
 		}
-		else{
-			return true;
-		}
+		
 	}
 	
 	public boolean shootOfAi(int x, int y){
@@ -358,17 +385,17 @@ public class Spielfeld {
 	}
 	
 	public boolean checkHit(int vertical, int horizontal){
-		if(field[vertical][horizontal] != 0 ){
-			if(field[vertical][horizontal] >= 1 && field[vertical][horizontal] <= 10){
-				field[vertical][horizontal] = 100;
+		if(field[vertical][horizontal] != false ){
+			if(field[vertical][horizontal] == true){
+				field[vertical][horizontal] = false;
 				return true;
 			}
-			else if(field[vertical][horizontal] == 100){
+			else if(field[vertical][horizontal] == false){
 				return false;
 			}
 		}
 		else{
-			field[vertical][horizontal] = -1;
+			field[vertical][horizontal] = false;
 		}
 		return false;
 	}
@@ -384,7 +411,11 @@ public class Spielfeld {
 	public void printField(){
 		for(int i = 0; i < field.length; i++){
 			for(int j = 0; j < field.length; j++){
-				System.out.print("[" + field[i][j] + "]");
+				String mark = "W";
+				if(field[i][j]){
+					mark = "S";
+				}
+				System.out.print("[" + mark + "]");
 			}
 			System.out.println("");
 		}
