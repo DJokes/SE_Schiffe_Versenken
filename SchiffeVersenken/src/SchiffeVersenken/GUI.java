@@ -333,7 +333,7 @@ public class GUI {
 			x = index % 10;
 			y = index / 10;
 
-			if (checkAroundFirstField(x, y)) { //Hier Eingefügt
+			if (checkAroundField(x, y)) { //Hier Eingefügt
 				if (isShipSizeValidate(x, y, ship_size)) {
 					if (ship_size != 1) {
 						setzen = true;
@@ -371,11 +371,11 @@ public class GUI {
 //		}
 	}
 	
-	public boolean checkAroundFirstField(int x, int y){
+	public boolean checkAroundField(int x, int y){
 		for(int i =y-1; i <= (y+1);i++){
 			for(int j = x-1;j <= (x+1) ;j++){
 				try{
-					if(fieldArray[j][i] == true && !(i == y && j == x)){
+					if(fieldArray[j][i] == true && !(i == this.y && j == this.x) && !(i == y && j == x)){
 						return false;
 					}
 					
