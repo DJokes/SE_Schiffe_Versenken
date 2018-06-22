@@ -2,6 +2,8 @@ package SchiffeVersenken;
 
 import java.awt.Color;
 
+import javax.swing.JOptionPane;
+
 public class Game {
 	private GUI gui = null;
 	private int hits = 30;
@@ -12,7 +14,8 @@ public class Game {
 	public Game(GUI gui) {
 		this.gui = gui;
 		enemy = new AI(new Spielfeld());
-		// enemy.setShips();
+		enemy.setShips();
+		enemy.getField().printField();
 		field = enemy.getField().getField();
 
 	}
@@ -35,7 +38,7 @@ public class Game {
 				if (field[x][y] == false) {
 					gui.getRightGridFieldArray()[index].setBackground(Color.BLACK);
 					turn = false;
-				} else {
+				} else if (field[x][y] == true && gui.getRightGridFieldArray()[index].getBackground() != Color.RED){
 					gui.getRightGridFieldArray()[index].setBackground(Color.RED);
 					hits--;
 					gui.setPlayerScore(5);
@@ -49,6 +52,8 @@ public class Game {
 
 	public boolean isOver() {
 		if (hits == 0) {
+			JOptionPane.showMessageDialog(null, "Spiel Ende!");
+			hits = 30;
 			return true;
 		} else {
 			return false;
