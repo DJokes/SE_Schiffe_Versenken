@@ -333,16 +333,19 @@ public class GUI {
 			x = index % 10;
 			y = index / 10;
 
-			if (isShipSizeValidate(x, y, ship_size)) {
-				if (ship_size != 1) {
-					setzen = true;
+			if (checkAroundFirstField(x, y)) { //Hier Eingefügt
+				if (isShipSizeValidate(x, y, ship_size)) {
+					if (ship_size != 1) {
+						setzen = true;
+					}
+					fieldArray[x][y] = true;
+					leftGridFieldArray[x + (y * 10)].setBackground(Color.GREEN);
+
+					return true;
+
 				}
-				fieldArray[x][y] = true;
-				leftGridFieldArray[x + (y * 10)].setBackground(Color.GREEN);
-
-				return true;
-
 			}
+			System.out.println("Setzen getestet: " + setzen);
 		}
 		if (getShipHitpoints(shipNormal) == 0) {
 			startGame();
@@ -367,7 +370,23 @@ public class GUI {
 //			}
 //		}
 	}
-
+	
+	public boolean checkAroundFirstField(int x, int y){
+		for(int i =y-1; i <= (y+1);i++){
+			for(int j = x-1;j <= (x+1) ;j++){
+				try{
+					if(fieldArray[j][i] == true && !(i == y && j == x)){
+						return false;
+					}
+					
+				}catch(Exception e){
+					continue;
+				}
+			}
+		}
+		return true;
+	}
+	
 	public boolean isInField(int x, int y) {
 		if (x >= 0 && x < fieldArray.length) {
 			if (y >= 0 && y < fieldArray[0].length) {
@@ -379,6 +398,7 @@ public class GUI {
 	}
 
 	public boolean isFieldValidate(int x, int y) {
+		System.out.println(x + " Koordinaten" + y);
 		if (isInField(x, y) && !fieldArray[x][y]) {
 			if (isInField(x - 1, y)) {
 				if (fieldArray[x - 1][y]) {
