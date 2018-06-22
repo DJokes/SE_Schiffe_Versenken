@@ -247,7 +247,7 @@ public class AI {
 
 	public static void main(String[] args) {
 //		AI test = new AI();
-		AI test = new AI(new Spielfeld(0, 1));
+		AI test = new AI(new Spielfeld(0, 2));
 		test.setShips();
 		System.out.println("Your Field");
 		test.getField().printField();
