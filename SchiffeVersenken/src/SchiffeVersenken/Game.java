@@ -35,7 +35,7 @@ public class Game {
 
 		if (!isOver()) {
 			if (turn) {
-				if (field[x][y] == false) {
+				if (field[x][y] == false && gui.getRightGridFieldArray()[index].getBackground() != Color.BLACK) {
 					gui.getRightGridFieldArray()[index].setBackground(Color.BLACK);
 					turn = false;
 				} else if (field[x][y] == true && gui.getRightGridFieldArray()[index].getBackground() != Color.RED){
@@ -44,6 +44,10 @@ public class Game {
 					gui.setPlayerScore(5);
 					gui.setOpponentScore(-2);
 				}
+				else {
+					return;
+				}
+				
 			} else {
 				waitForEnemy();
 			}
