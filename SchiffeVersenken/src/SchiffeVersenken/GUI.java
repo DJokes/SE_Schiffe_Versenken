@@ -304,17 +304,12 @@ public class GUI {
 				}
 			}
 
-			if (chosenSettings == 1) {
-				for (int i = 0; i < ship_size; i++) {
-//					if(checkAroundField()){
-//						isValid = false;
-//						break;
-//					}
-					if (!isFieldValidate(firstX + (diffX != 0 ? (int) Math.copySign(i, diffX) : 0),
-							firstY + (diffY != 0 ? (int) Math.copySign(i, diffY) : 0))) {
-						isValid = false;
-						break;
-					}
+			for (int i = 0; i < ship_size; i++) {
+
+				if (!isFieldValidate(firstX + (diffX != 0 ? (int) Math.copySign(i, diffX) : 0),
+						firstY + (diffY != 0 ? (int) Math.copySign(i, diffY) : 0))) {
+					isValid = false;
+					break;
 				}
 			}
 
@@ -339,7 +334,7 @@ public class GUI {
 			x = index % 10;
 			y = index / 10;
 
-			if (checkAroundField(x, y)) { //Hier Eingefügt
+			if (checkAroundField(x, y)) { // Hier Eingefügt
 				if (isShipSizeValidate(x, y, ship_size)) {
 					if (ship_size != 1) {
 						setzen = true;
@@ -361,24 +356,24 @@ public class GUI {
 	}
 
 	private void startGame() {
-		
+
 		JOptionPane.showMessageDialog(null, "Spiel beginnt!");
 		GameController game = new GameController(new Game(this), getLeftGridFieldArray(), getRightGridFieldArray());
-//		Game game = new Game();
-//		int nextPlayer = game.determineBeginner();
-//		while (!game.isOver()) {
-//			if (nextPlayer == 1) {
-//				game.shoot();
-//				nextPlayer = 2;
-//			} else {
-//				game.waitForEnemy();
-//				nextPlayer = 1;
-//			}
-//		}
+		// Game game = new Game();
+		// int nextPlayer = game.determineBeginner();
+		// while (!game.isOver()) {
+		// if (nextPlayer == 1) {
+		// game.shoot();
+		// nextPlayer = 2;
+		// } else {
+		// game.waitForEnemy();
+		// nextPlayer = 1;
+		// }
+		// }
 	}
-	
-	public boolean checkAroundField(int x, int y){
-		if(chosenSettings == 1){
+
+	public boolean checkAroundField(int x, int y) {
+		if (chosenSettings == 1) {
 			for (int i = y - 1; i <= (y + 1); i = i + 2) {
 				for (int j = x - 1; j <= (x + 1); j = j + 2) {
 					try {
@@ -394,7 +389,7 @@ public class GUI {
 		}
 		return true;
 	}
-	
+
 	public boolean isInField(int x, int y) {
 		if (x >= 0 && x < fieldArray.length) {
 			if (y >= 0 && y < fieldArray[0].length) {
@@ -427,6 +422,9 @@ public class GUI {
 				if (fieldArray[x][y + 1]) {
 					return false;
 				}
+			}
+			if (!checkAroundField(x, y)) {
+				return false;
 			}
 		} else {
 			return false;
@@ -548,7 +546,7 @@ public class GUI {
 
 		x = 0;
 		y = 0;
-		
+
 		playerScore = 0;
 		enemyScore = 0;
 		setPlayerScore(0);
@@ -587,19 +585,19 @@ public class GUI {
 	public JButton[] getRightGridFieldArray() {
 		return rightGridFieldArray;
 	}
-	
+
 	public int[] getShipNormal() {
 		return shipNormal;
 	}
-	
+
 	public int[] getShipSpezial() {
 		return shipSpezial;
 	}
-	
+
 	public int getPlayerScore() {
 		return playerScore;
 	}
-	
+
 	public int getEnemyScore() {
 		return enemyScore;
 	}
