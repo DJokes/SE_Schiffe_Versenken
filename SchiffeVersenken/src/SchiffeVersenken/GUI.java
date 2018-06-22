@@ -378,15 +378,17 @@ public class GUI {
 	}
 	
 	public boolean checkAroundField(int x, int y){
-		for(int i =y-1; i <= (y+1);i = i +2 ){
-			for(int j = x-1;j <= (x+1) ;j = j+ 2){
-				try{
-					if(fieldArray[j][i] == true){
-						return false;
+		if(chosenSettings == 1){
+			for (int i = y - 1; i <= (y + 1); i = i + 2) {
+				for (int j = x - 1; j <= (x + 1); j = j + 2) {
+					try {
+						if (fieldArray[j][i] == true) {
+							return false;
+						}
+
+					} catch (Exception e) {
+						continue;
 					}
-					
-				}catch(Exception e){
-					continue;
 				}
 			}
 		}
