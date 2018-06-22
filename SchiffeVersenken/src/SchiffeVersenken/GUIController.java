@@ -117,7 +117,6 @@ public class GUIController extends MouseAdapter implements ActionListener, Mouse
 
 		for (int i = 0; i < leftGridFieldArray.length; i++) {
 			if (e.getSource() == leftGridFieldArray[i]) {
-				System.out.println("Linkes Spielfeld, Index: " + i);
 				gui.placeShip(i);
 				break;
 			}
@@ -125,7 +124,6 @@ public class GUIController extends MouseAdapter implements ActionListener, Mouse
 
 		for (int i = 0; i < rightGridFieldArray.length; i++) {
 			if (e.getSource() == rightGridFieldArray[i]) {
-				System.out.println("Rechtes Spielfeld, Index: " + i);
 				break;
 			}
 		}

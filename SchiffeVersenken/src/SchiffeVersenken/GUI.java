@@ -346,7 +346,6 @@ public class GUI {
 
 				}
 			}
-			System.out.println("Setzen getestet: " + setzen);
 		}
 		if (getShipHitpoints(shipNormal) == 0) {
 			startGame();
@@ -401,7 +400,6 @@ public class GUI {
 	}
 
 	public boolean isFieldValidate(int x, int y) {
-		System.out.println(x + " Koordinaten" + y);
 		if (isInField(x, y) && !fieldArray[x][y]) {
 			if (isInField(x - 1, y)) {
 				if (fieldArray[x - 1][y]) {
