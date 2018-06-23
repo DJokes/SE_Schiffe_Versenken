@@ -67,14 +67,22 @@ public class Game {
 	public void waitForEnemy() {
 		boolean enemyHasShot = false;
 		enemy.takeTurn();
-		enemy.turnResult(0);
+		if(enemy.getLastHit()){
+			enemy.turnResult(1);
+		}
+		else{
+			enemy.turnResult(0);
+		}
+
 		int pos = enemy.getLastShot().getX() + enemy.getLastShot().getY() * 10;
 		if (gui.getLeftGridFieldArray()[pos].getBackground() == Color.GREEN) {
 			gui.getLeftGridFieldArray()[pos].setBackground(Color.RED);
 			gui.setOpponentScore(5);
 			gui.setPlayerScore(-2);
+			enemy.setLastHit(true);
 		} else {
 			gui.getLeftGridFieldArray()[pos].setBackground(Color.BLACK);
+			enemy.setLastHit(false);
 			enemyHasShot = true;
 		}
 		if (enemyHasShot) {

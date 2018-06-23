@@ -22,6 +22,7 @@ public class AI {
 	private Position walker;
 	private Position lastShot;
 	private Probe probe;
+	private boolean lastHit = false;
 	private int[] ships;
 
 	public AI() {
@@ -74,6 +75,14 @@ public class AI {
 		this.lastShot = new Position();
 		this.probe = null;
 		this.ships = ships;
+	}
+	
+	public boolean getLastHit(){
+		return lastHit;
+	}
+	
+	public void setLastHit(boolean hitResult){
+		this.lastHit = hitResult;
 	}
 
 	public Spielfeld getField() {
