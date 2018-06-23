@@ -23,6 +23,7 @@ public class AI {
 	private Position lastShot;
 	private Probe probe;
 	private boolean lastHit = false;
+	private int hitScore = 0;
 	private int[] ships;
 
 	public AI() {
@@ -75,6 +76,18 @@ public class AI {
 		this.lastShot = new Position();
 		this.probe = null;
 		this.ships = ships;
+	}
+	
+	public void incremenetHitScore(){
+		hitScore++;
+	}
+	
+	public void resetHitScore(){
+		hitScore = 0;
+	}
+	
+	public int getHitScore(){
+		return hitScore;
 	}
 	
 	public boolean getLastHit(){

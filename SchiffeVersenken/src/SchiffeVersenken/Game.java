@@ -68,7 +68,12 @@ public class Game {
 		boolean enemyHasShot = false;
 		enemy.takeTurn();
 		if(enemy.getLastHit()){
-			enemy.turnResult(1);
+			if(enemy.getHitScore() <= 5)
+				enemy.turnResult(1);
+			else{
+				enemy.turnResult(2);
+				enemy.resetHitScore();
+			}
 		}
 		else{
 			enemy.turnResult(0);
@@ -80,6 +85,7 @@ public class Game {
 			gui.setOpponentScore(5);
 			gui.setPlayerScore(-2);
 			enemy.setLastHit(true);
+			enemy.incremenetHitScore();
 		} else {
 			gui.getLeftGridFieldArray()[pos].setBackground(Color.BLACK);
 			enemy.setLastHit(false);
