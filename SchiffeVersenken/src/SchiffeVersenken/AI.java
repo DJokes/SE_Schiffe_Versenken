@@ -96,7 +96,7 @@ public class AI {
 	public void setShips() {
 		int direction = 1;
 		Position position = new Position().random(7);//0 to 7 on x and y
-		position = position.add(1);//1 to 8 on x and y
+		//position = position.add(1);//1 to 8 on x and y
 		for (int ship = ships.length - 1; ship >= 2; ship--) {
 			for (int j = 0; j < ships[ship]; j++) {
 				//position = getStartPoint(ship);
@@ -116,8 +116,8 @@ public class AI {
 						direction = changeDirection(direction);
 					}
 					if(tries == 4){
-						position = new Position().random(7);//0 to 7 on x and y
-						position = position.add(1);//1 to 8 on x and y
+						position = new Position().random(9);//0 to 7 on x and y
+						//position = position.add(1);//1 to 8 on x and y
 						tries = 0;
 					}
 					tries++;
@@ -423,7 +423,7 @@ public class AI {
 
 	public static void main(String[] args) {
 		//AI test = new AI();
-		AI test = new AI(new Spielfeld(0, 1));
+		AI test = new AI(new Spielfeld(0, 0));
 		test.setShips();
 		System.out.println("Your Field");
 		test.getField().printField();

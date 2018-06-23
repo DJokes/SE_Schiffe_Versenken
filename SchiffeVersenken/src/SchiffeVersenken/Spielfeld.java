@@ -167,10 +167,10 @@ public class Spielfeld {
 		Position aroundOne = pos.getSorrounder(direction, 1);
 		Position aroundTwo = pos.getSorrounder(direction, 2); 
 		
-		if(getTile(inside.moveToDirection(direction)) != false){
+		if(checkBounds(inside.moveToDirection(-direction)) && getTile(inside.moveToDirection(-direction)) != false){
 			return true;
 		}
-		for(int i = 0; i < ship; i++){
+		for(int i = 0; i <= ship; i++){
 			if(!checkBounds(inside) ){
 				return true;
 			}
@@ -222,7 +222,7 @@ public class Spielfeld {
 		Position aroundOne = inside.getSorrounder(direction, 1);
 		Position aroundTwo = inside.getSorrounder(direction, 2);
 		
-		for(int i = 0; i < ship; i++){
+		for(int i = 0; i <= ship; i++){
 			if(!checkBounds(inside) ){
 				return true;
 			}
