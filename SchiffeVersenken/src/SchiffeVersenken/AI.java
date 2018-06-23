@@ -99,7 +99,7 @@ public class AI {
 		position = position.add(1);//1 to 8 on x and y
 		for (int ship = ships.length - 1; ship >= 2; ship--) {
 			for (int j = 0; j < ships[ship]; j++) {
-				position = getStartPoint(ship);
+				//position = getStartPoint(ship);
 				boolean shipIsNotSet = true;
 				int tries = 0;
 				while (shipIsNotSet) {
@@ -116,7 +116,8 @@ public class AI {
 						direction = changeDirection(direction);
 					}
 					if(tries == 4){
-						position = getStartPoint(ship);
+						position = new Position().random(7);//0 to 7 on x and y
+						position = position.add(1);//1 to 8 on x and y
 						tries = 0;
 					}
 					tries++;
@@ -140,14 +141,14 @@ public class AI {
 		}
 	}
 	
-	private Position getStartPoint(int ship){
-		Position candidate = new Position().random();
-		while(!this.field.possibleSet(candidate, ship)){
-			candidate = new Position().random(7);//0 to 7 on x and y
-			candidate = candidate.add(1);//1 to 8 on x and y
-		}
-		return candidate;
-	}
+//	private Position getStartPoint(int ship){
+//		Position candidate = new Position().random();
+//		while(!this.field.possibleSet(candidate, ship)){
+//			candidate = new Position().random(7);//0 to 7 on x and y
+//			candidate = candidate.add(1);//1 to 8 on x and y
+//		}
+//		return candidate;
+//	}
 	
 	
 	public Position takeTurn(){//logic: random for beruhren and probe otherwise
@@ -420,13 +421,13 @@ public class AI {
 		NO_DIRECT_AND_DIAGONAL_TOUCH		
 	}
 
-//	public static void main(String[] args) {
-//		//AI test = new AI();
-//		AI test = new AI(new Spielfeld(0, 0));
-//		//test.setShips();
-//		//System.out.println("Your Field");
-//		//test.getField().printField();
-//		//System.out.println("");
+	public static void main(String[] args) {
+		//AI test = new AI();
+		AI test = new AI(new Spielfeld(0, 1));
+		test.setShips();
+		System.out.println("Your Field");
+		test.getField().printField();
+		//System.out.println("");
 //		for(int i = 0; i < 10; i++) {
 //			test.takeTurn();
 //			if(i < 6) {
@@ -457,7 +458,7 @@ public class AI {
 //		System.out.print("" + test.getHistory().totalHits() + " hits\n");		
 //		System.out.println(test.getHistory());
 //		System.out.println("");
-//
-//	}
+
+	}
 
 }

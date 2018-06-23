@@ -105,4 +105,44 @@ public class Position {//doesn't check bounds
 	public String toString() {
 		return new String("("+this.getX()+","+this.getY()+")");
 	}
+	
+	public Position getSorrounder(int direction, int part){
+		if(direction == 1 || direction == -1){
+			if(part == 1){
+				return this.up();
+			}
+			else{
+				return this.down();
+			}
+		}
+		else if(direction == 2 || direction == -2){
+			if(part == 1){
+				return this.left();
+			}
+			else{
+				return this.right();
+			}
+		}
+		else{
+			return this;
+		}
+	}
+
+	public Position moveToDirection(int direction){
+		if(direction == 1){
+			return this.right();
+		}
+		else if(direction == -1){
+			return this.left();
+		}
+		else if(direction == 2){
+			return this.down();
+		}
+		else if(direction == -2){
+			return this.up();
+		}
+		else{
+			return this;	
+		}
+	}
 }

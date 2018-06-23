@@ -118,7 +118,23 @@ public class Spielfeld {
 		}
 	}
 	
-	private boolean isNotEnoughSpace(int ship, Position pos, int direction){
+	public boolean isNotEnoughSpace(int ship, Position pos, int direction){
+		if(positioning == 0 ){
+			return isEnoughSpaceForWater(ship, pos, direction);
+		}
+		else if(positioning == 1){
+			return isEnoughSpaceAtCorners(ship, pos, direction);
+		}
+		else if(positioning == 2){
+			return isEnoughSpaceAtGenerall(ship, pos, direction);
+		}
+		else{
+			return false;
+		}
+		
+	}
+
+	public boolean isEnoughSpaceAtGenerall(int ship, Position pos, int direction){
 		Position inside = pos;
 		for(int i = 0; i < ship; i++){
 			if(!checkBounds(inside)){
@@ -140,274 +156,120 @@ public class Spielfeld {
 				inside = inside.up();
 			}
 			else{
-				return true;	
+				return true;				
 			}
 		}
 		return false;
-		
 	}
-	
-	public boolean possibleSet(Position pos, int delta){
-		if(positioning == 2){
-			return touchingPositioning(pos, delta);
+
+	public boolean isEnoughSpaceAtCorners(int ship, Position pos, int direction){
+		Position inside = pos; 
+		Position aroundOne = pos.getSorrounder(direction, 1);
+		Position aroundTwo = pos.getSorrounder(direction, 2); 
+		
+		if(getTile(inside.moveToDirection(direction)) != false){
+			return true;
 		}
-		else if(positioning == 1){
-			return cornersTouchingPositioning(pos, delta);
-		}
-		else if(positioning == 0){
-			return noTouchingPositioning(pos, delta);
+		for(int i = 0; i < ship; i++){
+			if(!checkBounds(inside) ){
+				return true;
+			}
+			else if(checkBounds(aroundOne) && checkBounds(aroundTwo)){
+				if(getTile(inside) != false || getTile(aroundOne) != false || getTile(aroundTwo) != false){
+					return true;
+				}
+			}
+			else if(checkBounds(aroundOne) && !checkBounds(aroundTwo)){
+				if(getTile(inside) != false || getTile(aroundOne) != false){
+					return true;
+				}
+			}
+			else if(!checkBounds(aroundOne) && checkBounds(aroundTwo)){
+				if(getTile(inside) != false || getTile(aroundTwo) != false){
+					return true;
+				}
+			}
+			
+			if(direction == 1){
+				inside = inside.right();
+				aroundOne = aroundOne.right();
+				aroundTwo = aroundTwo.right();
+			}
+			else if(direction == -1){
+				inside = inside.left();
+				aroundOne = aroundOne.left();
+				aroundTwo = aroundTwo.down();
+			}
+			else if(direction == 2){
+				inside = inside.down();
+				aroundOne = aroundOne.down();
+				aroundTwo = aroundTwo.down();
+			}
+			else if(direction == -2){
+				inside = inside.up();
+				aroundOne = aroundOne.up();
+				aroundTwo = aroundTwo.up();
+			}
+			else{
+				return true;				
+			}
 		}
 		return false;
 	}
-	
-	private boolean touchingPositioning(Position pos, int delta){
-		Position mover = pos;
-		//Right 
-		boolean rightIsPossible = true;
-		for(int i = 0; i < delta; i++){
-			if(checkBounds(mover) && getTile(mover) != false){
-				rightIsPossible = false;
-				break;
-			}
-			else{
-				mover = mover.right();
-			}
-		}
+
+	public boolean isEnoughSpaceForWater(int ship, Position pos, int direction){
+		Position inside = pos.moveToDirection(direction);
+		Position aroundOne = inside.getSorrounder(direction, 1);
+		Position aroundTwo = inside.getSorrounder(direction, 2);
 		
-		//Left 
-		mover = pos;
-		boolean leftIsPossible = true;
-		for(int i = 0; i < delta; i++){
-			if(checkBounds(mover) && getTile(mover) != false){
-				leftIsPossible = false;
-				break;
-			}
-			else{
-				mover = mover.left();
-			}
-		}
-		
-		//Up 
-		mover = pos;
-		boolean upIsPossible = true;
-		for(int i = 0; i < delta; i++){
-			if(checkBounds(mover) && getTile(mover) != false){
-				upIsPossible = false;
-				break;
-			}
-			else{
-				mover = mover.up();
-			}
-		}
-		
-		//Down
-		mover = pos;
-		boolean downIsPossible = true;
-		for(int i = 0; i <= delta; i++){
-			if(checkBounds(mover) && getTile(mover) != false){
-				downIsPossible = false;
-				break;
-			}
-			else{
-				mover = mover.down();
-			}
-		}
-		if(rightIsPossible || leftIsPossible || upIsPossible || downIsPossible){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
-	
-	private boolean cornersTouchingPositioning(Position pos, int delta){
-		//Right 
-		Position mover = pos;
-		boolean rightIsPossible = (checkBounds(mover.left()) && getTile(mover.left()) == false);
-		for(int i = 0; i <= delta; i++){
-			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, 1)){
-				rightIsPossible = false;
-				break;
-			}
-			else{
-				mover = mover.right();
-			}
-		}
-		
-		//Left 
-		mover = pos;
-		boolean leftIsPossible = (checkBounds(mover.right()) && getTile(mover.right()) == false);
-		for(int i = 0; i <= delta; i++){
-			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, -1)){
-				leftIsPossible = false;
-				break;
-			}
-			else{
-				mover = mover.left();
-			}
-		}
-		
-		//Up 
-		mover = pos;
-		boolean upIsPossible = (checkBounds(mover.down()) && getTile(mover.down()) == false);
-		for(int i = 0; i <= delta; i++){
-			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(pos, -2)){
-				upIsPossible = false;
-				break;
-			}
-			else{
-				mover = mover.up();
-			}
-		}
-		
-		//Down
-		mover = pos;
-		boolean downIsPossible = (checkBounds(mover.up()) && getTile(mover.up()) == false);
-		for(int i = 0; i <= delta; i++){
-			if(checkBounds(mover) && getTile(mover) == false && !noShipAround(mover, 2)){
-				downIsPossible = false;
-				break;
-			}
-			else{
-				mover = mover.down();
-			}
-		}
-		if(rightIsPossible || leftIsPossible || upIsPossible || downIsPossible){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
-	
-	private boolean noTouchingPositioning(Position pos, int delta){
-		//Right 
-		Position mover = pos.left();
-		//Position is at border
-		if(!checkBounds(mover)){
-			mover = pos;
-		}
-		boolean rightIsPossible = true;
-		for(int i = 0; i <= delta; i++){
-			if(checkBounds(mover) && getTile(mover) && !noShipAround(mover, 1)){
-				rightIsPossible = false;
-			}
-			else{
-				mover = mover.right();
-			}
-		}
-	
-		//Left 
-		mover = pos.right();
-		if(!checkBounds(mover)){
-			mover = pos;
-		}
-		boolean leftIsPossible = true;
-		for(int i = 0; i <= delta; i++){
-			if(checkBounds(mover) && getTile(mover) && !noShipAround(mover, -1)){
-				leftIsPossible = false;
-			}
-			else{
-				mover = mover.left();
-			}
-		}
-		
-		//Up 
-		mover = pos.down();
-		if(!checkBounds(mover)){
-			mover = pos;
-		}
-		boolean upIsPossible = true;
-		for(int i = 0; i <= delta; i++){
-			if(checkBounds(mover) && getTile(mover) && !noShipAround(mover, -2)){
-				upIsPossible = false;
-			}
-			else{
-				mover = mover.up();
-			}
-		}
-		//Down
-		mover = pos.up();
-		if(!checkBounds(mover)){
-			mover = pos;
-		}
-		boolean downIsPossible = true;
-		for(int i = 0; i <= delta; i++){
-			if(checkBounds(mover) && getTile(mover) && !noShipAround(mover, 2)){
-				downIsPossible = false;
-			}
-			else{
-				mover = mover.down();
-			}
-		}
-		if(rightIsPossible || leftIsPossible || upIsPossible || downIsPossible){
-			return true;
-		}
-		else{
-			return false;
-		}
-		
-	}
-	
-	private boolean noShipAround(Position pos, int direction){
-		if(direction == 1 || direction == -1){
-			Position up = pos.up();
-			Position down = pos.down();
-			boolean upIsFree;
-			boolean downIsFree;
-			if(!checkBounds(up)){
-				upIsFree = true;
-			}
-			else{
-				upIsFree = !getTile(up);
-			}
-			
-			if(!checkBounds(up)){
-				downIsFree = true;
-			}
-			else{
-				downIsFree = !getTile(down);
-			}
-			
-			if(!downIsFree || !upIsFree){
-				return false;
-			}
-			else{
+		for(int i = 0; i < ship; i++){
+			if(!checkBounds(inside) ){
 				return true;
 			}
-		}
-		else if(direction == 2 || direction == -2){
-			Position left = pos.left();
-			Position right = pos.right();
-			boolean leftIsFree;
-			boolean rightIsFree;
-			if(!checkBounds(left)){
-				leftIsFree = true;
+			else if(checkBounds(aroundOne) && checkBounds(aroundTwo)){
+				if(getTile(inside) != false || getTile(aroundOne) != false || getTile(aroundTwo) != false){
+					return true;
+				}
 			}
-			else{
-				leftIsFree = !getTile(left);
+			else if(checkBounds(aroundOne) && !checkBounds(aroundTwo)){
+				if(getTile(inside) != false || getTile(aroundOne) != false){
+					return true;
+				}
 			}
-			
-			if(!checkBounds(right)){
-				rightIsFree = true;
-			}
-			else{
-				rightIsFree = !getTile(right);
+			else if(!checkBounds(aroundOne) && checkBounds(aroundTwo)){
+				if(getTile(inside) != false || getTile(aroundTwo) != false){
+					return true;
+				}
 			}
 			
-			if(!rightIsFree || !leftIsFree){
-				return false;
+			if(direction == 1){
+				inside = inside.right();
+				aroundOne = aroundOne.right();
+				aroundTwo = aroundTwo.right();
+			}
+			else if(direction == -1){
+				inside = inside.left();
+				aroundOne = aroundOne.left();
+				aroundTwo = aroundTwo.down();
+			}
+			else if(direction == 2){
+				inside = inside.down();
+				aroundOne = aroundOne.down();
+				aroundTwo = aroundTwo.down();
+			}
+			else if(direction == -2){
+				inside = inside.up();
+				aroundOne = aroundOne.up();
+				aroundTwo = aroundTwo.up();
 			}
 			else{
-				return true;
+				return true;				
 			}
 		}
-		
-		else{
-			return false;
-		}
-		
+	return false;	
 	}
+	
+	
 	
 	public boolean shootOfAi(int x, int y){
 		if(checkHit(x, y)){
