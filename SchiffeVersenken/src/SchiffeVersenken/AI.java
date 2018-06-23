@@ -165,7 +165,7 @@ public class AI {
 			}
 		}
 		beforeShot(candidate);
-		System.out.println("Shot: " + candidate);
+		//System.out.println("Shot: " + candidate);
 		return candidate;
 	}
 
@@ -267,7 +267,7 @@ public class AI {
 		this.history.hit(this.lastShot);
 		switch (result) {
 		// water
-		case 0:
+		case 0:	
 			if (isProbing()) {
 				this.probe.checkResult(result, this.lastShot);
 
