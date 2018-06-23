@@ -64,26 +64,14 @@ public class MemoryField {
 		 }
 	}
 	
-	public void hitCross(Position pos){//TODO
-		if(checkBounds(pos)){
-			 setValue(pos, true);
-		 }
-	}
-	
-	public void hitDiagonal(Position pos){//TODO
-		if(checkBounds(pos)){
-			 setValue(pos, true);
-		 }
-	}
-	
 	public String toString(){
 		String fieldString = "";
-		for(int line=0; line < this.maxY; line++){
-			for(int column=0; column < this.maxX; column++){
-				if(getValue(column, line)){
+		for(int vertical=0; vertical < this.maxY; vertical++){
+			for(int horizontal=0; horizontal < this.maxX; horizontal++){
+				if(getValue(horizontal, vertical)){
 					fieldString += "[X]";//.concat(new String("[X]"));//X for true/hit
 				} else{
-					fieldString += "[0]";//.concat(new String("[0]"));//0 for false
+					fieldString += "[ ]";//.concat(new String("[0]"));//0 for false
 				}				
 			}
 			fieldString += "\n";//.concat(new String("\n"));

@@ -39,6 +39,26 @@ public class AI {
 		this.probe = null;
 	}
 	
+	public AI(int shipType, ShipBorderConditions positioning){
+		//this is to help translate the special team's rules to ours
+		super();
+		switch(positioning) {
+		case TOUCHING_ALLOWED://beruhren
+			this.field = new Spielfeld(shipType, 2);
+			break;
+		case NO_DIRECT_TOUCH://ecken
+			this.field = new Spielfeld(shipType, 1);
+			break;
+		case NO_DIRECT_AND_DIAGONAL_TOUCH://wasser
+			this.field = new Spielfeld(shipType, 0);
+			break;
+		}
+		this.history = new MemoryField();
+		this.walker = new Position();
+		this.lastShot = new Position();
+		this.probe = null;
+	}
+	
 	public AI(Spielfeld aiField){
 		this.field = aiField;
 		this.history = new MemoryField();
@@ -132,12 +152,15 @@ public class AI {
 	
 	public Position takeTurn(){//logic: random for beruhren and probe otherwise
 		//endProbing();//always random logic TODO, just a marker
-		
-		
+				
 		Position candidate;
 		switch(this.field.getPositioning()) {
 		case 2://beruhren
-			candidate = randomShot();
+			if(isProbing()) {
+				candidate = probeShot();
+			}else {
+				candidate = randomShot();
+			}
 			break;
 		default://wasser or ecken
 			if(isProbing()) {
@@ -147,6 +170,7 @@ public class AI {
 			}
 		}
 		beforeShot(candidate);
+		System.out.println("Shot: " + candidate);
 		return candidate;
 	}
 	
@@ -170,9 +194,18 @@ public class AI {
 	}
 	
 	private Position probeShot() {
-		Position candidate = this.probe.probe();
-		while(candidate!=null && !this.field.checkBounds(candidate)) {//out of bounds
+		if(this.probe.probingOver()) {
+			endProbing();
+			return randomShot();
+		}
+		Position candidate = this.probe.probe();//probe shouldnt return null because of previous check
+		while(!this.field.checkBounds(candidate) || this.history.wasHit(candidate)) {
+			//out of bounds or already hit
 			this.probe.checkResult(0, candidate);//say it hit water to stop probe in that direction
+			if(this.probe.probingOver()) {//make sure probe can go on
+				endProbing();//it cant, go random
+				return randomShot();
+			}
 			candidate = this.probe.probe();//try again
 		}
 		//System.out.println("Probe shot: " + candidate);
@@ -220,22 +253,97 @@ public class AI {
 		case 0://water
 			if(isProbing()) {
 				this.probe.checkResult(result, this.lastShot);
-				//prediction changes
+				
+				
+				//PREDICTIONS
+				if(this.field.getPositioning() == 0) {//wasser
+					switch(this.probe.getProbing()-1) {//diagonal from previous is current horizontal/vertical
+					case 0://up
+						predictHorizontal(this.lastShot);
+						break;
+					case 1://right
+						predictVertical(this.lastShot);
+						break;
+					case 2://down
+						predictHorizontal(this.lastShot);
+						break;
+					case 3://left
+						predictVertical(this.lastShot);
+						break;
+					default:
+					}
+				}				
 			}
 			break;
 		case 1://ship
 			if(isProbing()) {
+				if((this.field.getPositioning() < 2) && (this.probe.getDirection() == null)) {
+					//this shot will set direction, predict accordingly
+					int dir = this.probe.getProbing();
+					if(dir == 0 || dir == 2) {//vertical, so predict horizontal
+						predictHorizontal(this.probe.getFirst());
+					}else {//horizontal, predict vertical
+						predictVertical(this.probe.getFirst());
+					}					
+				}
+				
 				this.probe.checkResult(result, this.lastShot);
-				//prediction changes
+				
+
+				//PREDICTIONS
+				if(this.field.getPositioning() < 2) {//wasser/ecken
+					switch(this.probe.getDirection()) {
+					case HORIZONTAL:
+						predictVertical(this.lastShot);
+						break;
+					case VERTICAL:
+						predictHorizontal(this.lastShot);
+						break;
+					default:
+					}
+				}
 				
 			} else {//start probe
-				this.probe = new Probe(this.lastShot);
+				switch(this.field.getPositioning()) {
+				case 2://beruhren gets a special probe
+					this.probe = new SurroundingsProbe(this.lastShot);
+					break;
+				default://wasser and ecken
+					this.probe = new Probe(this.lastShot);
+				}
 			}
 			break;
 		case 2://ship-kill
-			//prediction changes
-			endProbing();
-		default://weird stuff
+			if(isProbing()) {
+				this.probe.checkResult(result, this.lastShot);
+				
+				Position first = this.probe.getFirst();
+				Position last = this.probe.getLast();
+				switch(this.field.getPositioning()) {
+				case 2://beruhren
+					this.probe.checkResult(result, this.lastShot);//this probe continues even after ship-kill
+					//probeShot itself has the end for this probe
+					break;
+				case 1://ecken
+
+					//PREDICTIONS				
+					predictDirect(first);
+					predictDirect(last);
+					
+					endProbing();
+					break;
+				default://wasser
+
+					//PREDICTIONS				
+					predictDirect(first);
+					predictDiagonal(first);
+					predictDirect(last);
+					predictDiagonal(last);
+					
+					endProbing();
+				}
+			}			
+		default://weird stuff happened
 		}
 	}
 	
@@ -244,29 +352,108 @@ public class AI {
 		int y = (int) (Math.random() * maximumRange) + minimumRange;
 		return new Position(x, y);
 	}
+	
+	private void predictHorizontal(Position pos) {//predicts there's nothing left on pos's horizontal neighbours
+		Position direct;
+		
+		direct = pos.left();
+		if(this.field.checkBounds(direct)) {
+			//System.out.println("Predicted: "+direct);
+			this.history.hit(direct);
+		}
+		direct = pos.right();
+		if(this.field.checkBounds(direct)) {
+			//System.out.println("Predicted: "+direct);
+			this.history.hit(direct);
+		}
+	}
+	
+	private void predictVertical(Position pos) {//predicts there's nothing left on pos's vertical neighbours
+		Position direct;
+		
+		direct = pos.up();
+		if(this.field.checkBounds(direct)) {
+			//System.out.println("Predicted: "+direct);
+			this.history.hit(direct);
+		}
+		direct = pos.down();
+		if(this.field.checkBounds(direct)) {
+			//System.out.println("Predicted: "+direct);
+			this.history.hit(direct);
+		}
+	}
+	
+	private void predictDirect(Position pos) {//predicts there's nothing left on pos's direct neighbours
+		predictHorizontal(pos);
+		predictVertical(pos);
+	}
+	
+	private void predictDiagonal(Position pos) {//predicts there's nothing left on pos's diagonal neighbours
+		Position direct;
+		
+		direct = pos.add(-1, 1);//upper right
+		if(this.field.checkBounds(direct)) {
+			//System.out.println("Predicted: "+direct);
+			this.history.hit(direct);
+		}
+		direct = pos.add(1, 1);//lower right
+		if(this.field.checkBounds(direct)) {
+			//System.out.println("Predicted: "+direct);
+			this.history.hit(direct);
+		}
+		direct = pos.add(1, -1);//lower left
+		if(this.field.checkBounds(direct)) {
+			//System.out.println("Predicted: "+direct);
+			this.history.hit(direct);
+		}
+		direct = pos.add(-1, -1);//upper left
+		if(this.field.checkBounds(direct)) {
+			//System.out.println("Predicted: "+direct);
+			this.history.hit(direct);
+		}
+	}
+	
+	
+	public enum ShipBorderConditions {//this is from the special team, I'm trying to make things easier for us	
+		TOUCHING_ALLOWED,
+		NO_DIRECT_TOUCH,
+		NO_DIRECT_AND_DIAGONAL_TOUCH		
+	}
 
 //	public static void main(String[] args) {
-//		AI test = new AI();
-//		AI test = new AI(new Spielfeld(0, 2));
-//		test.setShips();
-//		System.out.println("Your Field");
-//		test.getField().printField();
-//		System.out.println("");
-//		for(int i = 0; i < 30; i++) {
+//		//AI test = new AI();
+//		AI test = new AI(new Spielfeld(0, 0));
+//		//test.setShips();
+//		//System.out.println("Your Field");
+//		//test.getField().printField();
+//		//System.out.println("");
+//		for(int i = 0; i < 10; i++) {
 //			test.takeTurn();
-//			
-//			switch(i) {
-//			case 1:
+//			if(i < 6) {
+//				switch(i) {
+//				case 1:
+//					System.out.println("MISSED!");
+//					test.turnResult(0);//water
+//					
+//					break;
+//				case 5:
+//					System.out.println("BLUB!");
+//					test.turnResult(2);//ship_kill
+//					
+//					break;
+//				default:
+//					System.out.println("HIT!");
+//					test.turnResult(1);//ship
+//					
+//				}
+//			} else {
+//				System.out.println("MISSED!");
 //				test.turnResult(0);//water
-//				break;
-//			case 5:
-//				test.turnResult(2);//ship_kill
-//				break;
-//			default:
-//				test.turnResult(1);//ship	
-//			}			
+//				
+//			}
+//			
 //		}		
-//		System.out.println("Your History after 30 shots");
+//		System.out.println("Your History after 10 shots");
 //		System.out.print("" + test.getHistory().totalHits() + " hits\n");		
 //		System.out.println(test.getHistory());
 //		System.out.println("");

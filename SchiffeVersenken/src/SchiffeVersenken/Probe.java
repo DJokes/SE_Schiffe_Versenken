@@ -7,10 +7,10 @@ public class Probe {//only for Wasser or Ecken
 	 * probing persists after ship-kill
 	 * */
 	
-	private Position first;
-	private Position last;
-	private int probing;//0 up, 1 right, 2 down, 3 left
-	private Direction direction;
+	protected Position first;
+	protected Position last;
+	protected int probing;//0 up, 1 right, 2 down, 3 left
+	protected Direction direction;
 	
 	public Probe() {
 		this(new Position());		
@@ -23,7 +23,23 @@ public class Probe {//only for Wasser or Ecken
 		this.direction = null;//there's a reason for this i swear
 	}
 
-	public Position probe() {//don't have a set direction yet, searching
+	public Position getFirst() {
+		return this.first;
+	}
+	
+	public Position getLast() {
+		return this.last;
+	}
+	
+	public int getProbing() {
+		return this.probing;
+	}
+	
+	public Direction getDirection() {
+		return this.direction;
+	}
+	
+	public Position probe() {//probe for next position
 		Position check;
 		
 		switch (this.probing){
@@ -63,11 +79,12 @@ public class Probe {//only for Wasser or Ecken
 			//keep probing same direction
 			break;
 		default:
+			updateLimits(pos);
 			return;//ship_kill, probe is over		
 		}
 	}
 	
-	private void updateLimits(Position pos) {//hit ship but didnt sink it yet
+	protected void updateLimits(Position pos) {//hit ship but didnt sink it yet
 		switch (this.probing){
 		case 0://up
 			this.first = pos;
@@ -86,7 +103,7 @@ public class Probe {//only for Wasser or Ecken
 		}
 	}
 	
-	private void setDirection() {//set ship orientation as direction
+	protected void setDirection() {//set ship orientation as direction
 		switch (this.probing){
 		case 0://up
 			this.direction = Direction.VERTICAL;
@@ -105,16 +122,18 @@ public class Probe {//only for Wasser or Ecken
 		}
 	}
 	
-	private boolean isGuided() {//has a direction
+	protected boolean isGuided() {//has a direction
 		return (this.direction != null);
 	}
 	
-	private void flipProbe() {//limit reached, try other side
+	protected void flipProbe() {//limit reached, try other side
 		this.probing += 2;// 0[up] goes to 2[down], 1[right] goes to 3[left], 2 and 3 go over limit
 		//but, again, this shouldn't happen ever
 	}
 	
-	
+	public boolean probingOver() {
+		return (this.probing > 3);//invalid probing value
+	}
 
 
 

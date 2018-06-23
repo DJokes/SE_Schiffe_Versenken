@@ -78,6 +78,10 @@ public class Position {//doesn't check bounds
 		return new Position(this.x + value, this.y + value);
 	}
 	
+	public Position add(int dX, int dY){//add a value to both x and y
+		return new Position(this.x + dX, this.y + dY);
+	}
+	
 	public Position up(){//position above
 		return new Position(this.x, this.y - 1);
 	}
