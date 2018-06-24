@@ -28,7 +28,7 @@ public class MyPlayer implements Player, ShipPlacer{
 
 	@Override
 	public void takeTurn(TurnAction turnAction) {
-		// TODO Auto-generated method stub
+		ai.takeTurn();
 		
 	}
 
