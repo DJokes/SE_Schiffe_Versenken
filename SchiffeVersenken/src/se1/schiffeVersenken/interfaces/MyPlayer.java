@@ -34,7 +34,7 @@ public class MyPlayer implements Player, ShipPlacer{
 
 	@Override
 	public void onEnemyShot(Position position, Tile tile, Ship ship) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
